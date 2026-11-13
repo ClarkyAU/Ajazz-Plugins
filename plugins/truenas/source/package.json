@@ -1,0 +1,21 @@
+{
+  "name": "truenas-streamdock",
+  "version": "1.2.0",
+  "description": "TrueNAS plugin for the AJAZZ Stream Dock software (AKP153E)",
+  "main": "src/index.js",
+  "scripts": {
+    "icons": "node scripts/make-icons.js",
+    "build": "node scripts/make-icons.js && node scripts/build.js",
+    "test": "node test/run-tests.js",
+    "package": "node scripts/make-icons.js && node scripts/build.js && node test/run-tests.js && node scripts/package.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "esbuild": "^0.25.12",
+    "pngjs": "^7.0.0",
+    "selfsigned": "^2.4.1",
+    "ws": "^8.22.0"
+  },
+  "private": true
+}

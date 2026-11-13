@@ -1,0 +1,151 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.truenas.setup",
+      "Name": "Setup",
+      "Tooltip": "Connect to your TrueNAS (address and API key)",
+      "Icon": "static/actions/setup.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/setup.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.truenas.system",
+      "Name": "System",
+      "Tooltip": "CPU, memory, temperature and uptime",
+      "Icon": "static/actions/system.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/system.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.truenas.network",
+      "Name": "Network",
+      "Tooltip": "Download and upload speed",
+      "Icon": "static/actions/network.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/network.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.truenas.storage",
+      "Name": "Storage pool",
+      "Tooltip": "Pool space and health",
+      "Icon": "static/actions/storage.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/storage.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.truenas.alerts",
+      "Name": "Alerts",
+      "Tooltip": "Active TrueNAS alerts",
+      "Icon": "static/actions/alerts.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/alerts.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.truenas.app",
+      "Name": "App",
+      "Tooltip": "Show an app and start or stop it",
+      "Icon": "static/actions/app.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/app.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "TrueNAS",
+  "Description": "Live TrueNAS stats, storage, alerts and app controls.",
+  "Icon": "static/plugin.png",
+  "Category": "TrueNAS",
+  "CategoryIcon": "static/category.png",
+  "CodePathWin": "plugin/index.js",
+  "CodePathMac": "plugin/index.js",
+  "Version": "1.2.0",
+  "URL": "https://www.truenas.com/",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    },
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.15"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "3.10.188.226"
+  },
+  "Nodejs": {
+    "Version": "20"
+  }
+}

@@ -1,0 +1,32 @@
+TrueNAS plugin for the AJAZZ Stream Dock software
+==================================================
+
+INSTALL
+1. Unzip this whole folder (right-click the zip > Extract All).
+2. Double-click install.bat.
+   It closes the Stream Dock software, copies the plugin in, and starts it again.
+   Your existing keys and settings are kept.
+
+SET UP
+1. In the Stream Dock software, open the "TrueNAS" group on the right.
+2. Drag the "Setup" key onto your deck and click it.
+3. In its settings, type your TrueNAS address (for example 192.168.1.20)
+   and paste an API key. All TrueNAS keys share this connection.
+   To make an API key: TrueNAS web page > your user icon (top right) >
+   My API Keys > Add.
+4. Add any other TrueNAS keys. Each key's "Shows" setting picks what it displays.
+
+KEYS
+- System:  CPU, memory, temperature, ZFS cache, uptime. Press: opens the dashboard.
+- Network: download and upload speed with a graph. Press: opens network settings.
+- Storage: how full each pool is and its health. Press: opens storage.
+- Alerts:  alert count, and the alerts themselves on joined keys.
+- App:     an app's state. Press to start; press twice to stop; hold to open it.
+
+Put several keys of the same kind next to each other and they join into one
+bigger display (for example 3 System keys in a row, or 2 rows for a graph).
+
+REMOVE
+Double-click uninstall.bat.
+
+Needs TrueNAS 25.04 or newer (Community Edition / SCALE).

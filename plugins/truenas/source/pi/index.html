@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>TrueNAS settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#0095d5; --good:#40cc8a; --warn:#ffba40; --bad:#ff5656; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  h2:first-child { margin-top: 2px; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row > label { width: 92px; flex: none; color: var(--muted); }
+  .row > .grow { flex: 1; min-width: 0; }
+  input[type=text], input[type=password], select {
+    width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 8px; font: inherit; outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+  .pw { position: relative; }
+  .pw input { padding-right: 46px; }
+  .pw button { position: absolute; right: 4px; top: 3px; }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  .check { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px 100px; color: var(--text); }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+  .hint b { color: var(--text); font-weight: 600; }
+  .hidden { display: none !important; }
+  details { margin-top: 6px; color: var(--muted); font-size: 12px; }
+  summary { cursor: pointer; color: var(--accent); }
+  ol { margin: 6px 0 0 18px; padding: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Setup key: the TrueNAS connection, shared by every TrueNAS key -->
+  <div id="sec-setup" class="hidden">
+    <h2>TrueNAS connection</h2>
+    <div class="status"><span class="dot" id="dot"></span><span class="txt" id="statusText">Not set up yet</span><button id="reconnect">Retry</button></div>
+    <div class="row"><label>Address</label><div class="grow"><input type="text" id="host" placeholder="e.g. 192.168.1.20 or truenas.local" spellcheck="false" /></div></div>
+    <div class="row"><label>API key</label><div class="grow pw"><input type="password" id="apiKey" placeholder="Paste your API key" spellcheck="false" autocomplete="off" /><button id="show">Show</button></div></div>
+    <label class="check"><input type="checkbox" id="allowSelfSigned" /> Allow self-signed certificate</label>
+    <div class="hint">All TrueNAS keys use this connection. You only need one Setup key; it shows whether the NAS is connected, and <b>pressing</b> it opens the TrueNAS web page.</div>
+    <details>
+      <summary>How do I get an API key?</summary>
+      <ol>
+        <li>Open the TrueNAS web page and sign in.</li>
+        <li>Click your user icon (top right) and choose <b>My API Keys</b>.</li>
+        <li>Click <b>Add</b>, give it a name such as "Stream Dock", and save.</li>
+        <li>Copy the key and paste it above. TrueNAS only shows it once.</li>
+      </ol>
+      <p>Starting and stopping apps needs a key for an admin user. A read-only admin key works for everything else.</p>
+    </details>
+  </div>
+
+  <!-- Every other key: only its own options -->
+  <div id="sec-key" class="hidden">
+    <h2>This key</h2>
+    <div class="row" id="opt-show"><label>Shows</label><div class="grow"><select id="show-sel"></select></div></div>
+    <div class="row hidden" id="opt-iface"><label>Port</label><div class="grow"><select id="iface"></select></div></div>
+    <div class="row hidden" id="opt-netUnits"><label>Speed in</label><div class="grow"><select id="netUnits"><option value="bits">Bits (Mb/s)</option><option value="bytes">Bytes (MB/s)</option></select></div></div>
+    <div class="row hidden" id="opt-pool"><label>Pool</label><div class="grow"><select id="pool"></select></div></div>
+    <div class="row hidden" id="opt-tempUnit"><label>Temperature</label><div class="grow"><select id="tempUnit"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option></select></div></div>
+    <div class="row hidden" id="opt-app"><label>App</label><div class="grow"><select id="app"></select></div></div>
+    <label class="check" id="opt-join"><input type="checkbox" id="join" /> Join with neighbouring keys</label>
+    <div class="hint" id="hint"></div>
+    <div class="hint hidden" id="noconn">Not connected yet: add the <b>Setup</b> key from the TrueNAS group to enter your NAS address and API key.</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ws = null, uuid = '', action = '', settings = {}, globals = {}, lastState = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var kind = function () { return String(action).split('.').pop(); };
+
+  // What each kind of key can show, and which options it has.
+  var KINDS = {
+    system: {
+      show: [['', 'Automatic'], ['compact', 'CPU + RAM'], ['cpu', 'CPU'], ['ram', 'Memory'], ['temp', 'CPU temperature'], ['arc', 'ZFS cache'], ['uptime', 'Uptime'], ['graph', 'CPU / RAM graph']],
+      opts: ['tempUnit'],
+      hint: '<b>Automatic</b>: one key shows CPU + RAM; a row shows CPU, Memory, Temp, ZFS cache, Uptime; a second row becomes a graph. Neighbouring <b>graph</b> keys share one big graph. <b>Press</b> to open the TrueNAS dashboard.'
+    },
+    network: {
+      show: [['', 'Automatic'], ['compact', 'Down + Up'], ['down', 'Download'], ['up', 'Upload'], ['port', 'Port and link'], ['graph', 'Graph']],
+      opts: ['iface', 'netUnits'],
+      hint: '<b>Automatic</b>: one key shows Down + Up; in a row the first key is Download, the second Upload and the rest a graph. Neighbouring <b>graph</b> keys share one graph. <b>Press</b> to open network settings.'
+    },
+    storage: {
+      show: [['', 'Automatic'], ['usage', 'How full'], ['free', 'Free space'], ['health', 'Health'], ['summary', 'All pools total']],
+      opts: ['pool'],
+      hint: '<b>Automatic</b>: with no pool chosen, one pool per key then a total. With a pool chosen, a row shows How full, Free space and Health for it. <b>Press</b> to open storage.'
+    },
+    alerts: {
+      show: [['', 'Automatic'], ['count', 'Number of alerts'], ['alert', 'Alert details']],
+      opts: [],
+      hint: '<b>Automatic</b>: the first key counts the alerts, the others show one alert each, worst first. <b>Press</b> to open the dashboard.'
+    },
+    app: {
+      show: null,
+      opts: ['app'],
+      hint: '<b>Press</b> to start a stopped app. <b>Press twice</b> to stop a running app. <b>Hold</b> to open its web page. <b>Automatic</b> keys next to each other fill in with your apps, running ones first.'
+    }
+  };
+
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function saveSettings() {
+    send({ event: 'setSettings', context: uuid, payload: settings });
+    toPlugin({ type: 'settings', settings: settings });
+  }
+  function saveGlobals() {
+    send({ event: 'setGlobalSettings', context: uuid, payload: globals });
+    toPlugin({ type: 'global', settings: globals });
+  }
+  var timer = null;
+  function saveGlobalsSoon() { clearTimeout(timer); timer = setTimeout(saveGlobals, 600); }
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function fill(sel, items, value, firstLabel) {
+    var html = firstLabel != null ? '<option value="">' + esc(firstLabel) + '</option>' : '';
+    var found = !value;
+    items.forEach(function (it) {
+      var v = Array.isArray(it) ? it[0] : typeof it === 'string' ? it : it.name;
+      var t = Array.isArray(it) ? it[1] : typeof it === 'string' ? it : (it.title && it.title !== it.name ? it.title + ' (' + it.name + ')' : it.name);
+      if (v === value) found = true;
+      html += '<option value="' + esc(v) + '">' + esc(t) + '</option>';
+    });
+    if (!found) html += '<option value="' + esc(value) + '">' + esc(value) + ' (not found)</option>';
+    sel.innerHTML = html;
+    sel.value = value || '';
+  }
+
+  var lastSig = '';
+  function render() {
+    var k = kind();
+    var isSetup = k === 'setup';
+    $('sec-setup').classList.toggle('hidden', !isSetup);
+    $('sec-key').classList.toggle('hidden', isSetup);
+    if (isSetup) { showGlobals(); return; }
+    var def = KINDS[k] || { show: null, opts: [], hint: '' };
+    $('opt-show').classList.toggle('hidden', !def.show);
+    ['iface', 'netUnits', 'pool', 'tempUnit', 'app'].forEach(function (o) { $('opt-' + o).classList.toggle('hidden', def.opts.indexOf(o) < 0); });
+    $('hint').innerHTML = def.hint;
+    $('join').checked = settings.join !== false;
+    $('tempUnit').value = settings.tempUnit || 'C';
+    $('netUnits').value = settings.netUnits || 'bits';
+    var st = lastState || {};
+    $('noconn').classList.toggle('hidden', !lastState || st.status === 'connected' || st.status === 'connecting');
+    var sig = JSON.stringify([k, st.ifaces, st.pools, st.apps, settings.show, settings.iface, settings.pool, settings.app]);
+    if (sig === lastSig) return;
+    lastSig = sig;
+    if (def.show) fill($('show-sel'), def.show, settings.show || '', null);
+    fill($('iface'), st.ifaces || [], settings.iface || '', 'All ports');
+    fill($('pool'), st.pools || [], settings.pool || '', 'Automatic');
+    fill($('app'), st.apps || [], settings.app || '', 'Automatic');
+  }
+
+  function showGlobals() {
+    if (document.activeElement !== $('host')) $('host').value = globals.host || '';
+    if (document.activeElement !== $('apiKey')) $('apiKey').value = globals.apiKey || '';
+    $('allowSelfSigned').checked = globals.allowSelfSigned !== false;
+  }
+
+  function showStatus(st) {
+    var colors = { connected: 'var(--good)', connecting: 'var(--accent)', error: 'var(--warn)', auth: 'var(--bad)', unconfigured: 'var(--muted)' };
+    $('dot').style.background = colors[st.status] || 'var(--muted)';
+    var t = st.statusText || '';
+    if (st.status === 'connected') t = 'Connected' + (st.hostname ? ' to ' + st.hostname : '') + (st.version ? ' · ' + st.version.replace(/^TrueNAS-?(SCALE-)?/i, '') : '');
+    $('statusText').textContent = t;
+    $('statusText').title = t;
+  }
+
+  // connection inputs (Setup key)
+  $('host').addEventListener('input', function () { globals.host = this.value.trim(); saveGlobalsSoon(); });
+  $('apiKey').addEventListener('input', function () { globals.apiKey = this.value.trim(); saveGlobalsSoon(); });
+  $('allowSelfSigned').addEventListener('change', function () { globals.allowSelfSigned = this.checked; saveGlobals(); });
+  $('show').addEventListener('click', function () {
+    var i = $('apiKey'); i.type = i.type === 'password' ? 'text' : 'password'; this.textContent = i.type === 'password' ? 'Show' : 'Hide';
+  });
+  $('reconnect').addEventListener('click', function () { toPlugin({ type: 'reconnect' }); });
+
+  // per-key inputs
+  function bind(id, keyName, isCheck) {
+    $(id).addEventListener('change', function () { settings[keyName] = isCheck ? this.checked : this.value; saveSettings(); });
+  }
+  bind('show-sel', 'show'); bind('iface', 'iface'); bind('netUnits', 'netUnits'); bind('pool', 'pool');
+  bind('tempUnit', 'tempUnit'); bind('app', 'app'); bind('join', 'join', true);
+
+  function connect(port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    try {
+      var info = JSON.parse(actionInfo || '{}');
+      action = info.action || '';
+      settings = (info.payload && info.payload.settings) || {};
+    } catch (e) {}
+    render();
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    ws.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (_) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { settings = p.settings || {}; render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { globals = p.settings || {}; if (kind() === 'setup') showGlobals(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { lastState = p; showStatus(p); render(); }
+    };
+  }
+  window.connectElgatoStreamDeckSocket = connect;
+  window.connectSocket = connect;
+})();
+</script>
+</body>
+</html>

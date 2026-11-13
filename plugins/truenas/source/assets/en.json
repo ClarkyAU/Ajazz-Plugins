@@ -1,0 +1,30 @@
+{
+  "Name": "TrueNAS",
+  "Description": "Live TrueNAS stats, storage, alerts and app controls.",
+  "Category": "TrueNAS",
+  "com.clarkyau.truenas.setup": {
+    "Name": "Setup",
+    "Tooltip": "Connect to your TrueNAS (address and API key)"
+  },
+  "com.clarkyau.truenas.system": {
+    "Name": "System",
+    "Tooltip": "CPU, memory, temperature and uptime"
+  },
+  "com.clarkyau.truenas.network": {
+    "Name": "Network",
+    "Tooltip": "Download and upload speed"
+  },
+  "com.clarkyau.truenas.storage": {
+    "Name": "Storage pool",
+    "Tooltip": "Pool space and health"
+  },
+  "com.clarkyau.truenas.alerts": {
+    "Name": "Alerts",
+    "Tooltip": "Active TrueNAS alerts"
+  },
+  "com.clarkyau.truenas.app": {
+    "Name": "App",
+    "Tooltip": "Show an app and start or stop it"
+  },
+  "Localization": {}
+}
