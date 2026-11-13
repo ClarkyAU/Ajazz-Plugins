@@ -1,0 +1,10 @@
+iCUE Battery for the Ajazz Stream Dock
+======================================
+1. Double-click install.bat. It closes the Stream Dock AJAZZ software, copies the plugin in and starts the software again.
+2. In iCUE: Settings > Software and Games > turn on "Enable SDK" (once).
+   Also switch on iCUE's "Enable Battery Gauge in Notification Area" for the headset (Device Settings): the plugin reads that
+   icon to show Charging and headset-off instantly.
+3. In the Stream Dock software, add the iCUE Battery "Setup" key first, then "Device" keys.
+   Neighbouring Device keys fill in Battery, Microphone and Connection.
+
+To remove it: double-click uninstall.bat.

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>iCUE Battery settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#7dc8ff; --good:#4ade80; --warn:#fbbf24; --bad:#f85149; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row > label { width: 110px; flex: none; color: var(--muted); }
+  .row > .grow { flex: 1; min-width: 0; }
+  select { width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; outline: none; }
+  select:focus { border-color: var(--accent); }
+  .check { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px 118px; }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+  .hint b { color: var(--text); font-weight: 600; }
+  .hidden { display: none !important; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+  td { padding: 4px 4px; border-bottom: 1px solid var(--line); }
+  td.r { text-align: right; white-space: nowrap; color: var(--muted); }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="status"><span class="dot" id="dot"></span><span class="txt" id="statusText">Starting…</span></div>
+
+  <div id="sec-setup" class="hidden">
+    <h2>Device</h2>
+    <div class="row"><label>Default device</label><div class="grow"><select id="device"></select></div></div>
+    <div class="hint">Keys use this device unless you pick another one in that key's own settings. Automatic picks your headset (or the first wireless device).</div>
+    <h2>Charging</h2>
+    <div class="row"><label>Check every</label><div class="grow"><select id="poll">
+      <option value="5">5 seconds</option><option value="10">10 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option>
+    </select></div></div>
+    <div class="hint" id="receiverHint"></div>
+    <h2>Found in iCUE</h2>
+    <table id="found"></table>
+    <button id="rescan">Search again</button>
+    <h2>iCUE</h2>
+    <div class="hint">iCUE has to be running with <b>Settings › Software and Games › Enable SDK</b> switched on. Nothing else to install. This plugin only reads from your devices; it never changes them. Pressing the Setup key searches again.</div>
+    <div class="hint" id="version"></div>
+  </div>
+
+  <div id="sec-key" class="hidden">
+    <h2>This key</h2>
+    <div class="row"><label>Shows</label><div class="grow"><select id="shows">
+      <option value="auto">Automatic</option>
+      <option value="battery">Battery</option>
+      <option value="mic">Microphone</option>
+      <option value="connection">Connection</option>
+    </select></div></div>
+    <div class="hint" id="showsHint"></div>
+    <div class="check"><input type="checkbox" id="join" /><label for="join">Join with neighbouring keys</label></div>
+    <div class="row"><label>Device</label><div class="grow"><select id="keyDevice"></select></div></div>
+    <div class="row" id="row-low"><label>Low battery warning</label><div class="grow"><select id="low">
+      <option value="off">Off</option><option value="10">10%</option><option value="15">15%</option>
+      <option value="20">20%</option><option value="25">25%</option><option value="30">30%</option>
+    </select></div></div>
+    <div class="hint" id="lowHint">The key flashes red at or below this level.</div>
+    <div class="hint">Keys next to each other fill in Battery, Microphone and Connection, in reading order. Turn off Join to make a key stand alone, or pick what each key shows.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var ws = null, uuid = '', action = '', settings = {}, globals = { device: 'auto', poll: 10 }, st = null;
+  var SETUP = 'com.clarkyau.icuebattery.setup';
+  var NAMES = { battery: 'Battery', mic: 'Microphone', connection: 'Connection', blank: 'nothing' };
+  var KINDS = { 8: 'Headset', 2: 'Mouse', 1: 'Keyboard', 16: 'Headset stand' };
+  function $(id) { return document.getElementById(id); }
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function save() { send({ event: 'setSettings', context: uuid, payload: settings }); toPlugin({ type: 'settings', settings: settings }); }
+  function saveGlobals() { send({ event: 'setGlobalSettings', context: uuid, payload: globals }); toPlugin({ type: 'global', settings: globals }); }
+  function readGlobals(g) { g = g || {}; globals = { device: g.device || 'auto', setupSeen: true, poll: [5, 10, 30, 60].indexOf(g.poll) >= 0 ? g.poll : 10 }; }
+  function deviceOptions(first) {
+    var opts = '<option value="' + first.value + '">' + first.label + '</option>', list = st ? st.devices : [];
+    for (var i = 0; i < list.length; i++) opts += '<option value="' + esc(list[i].id) + '">' + esc(list[i].name) + (list[i].present ? '' : ' (not found)') + '</option>';
+    return opts;
+  }
+  function render() {
+    var isSetup = action === SETUP;
+    $('sec-setup').classList.toggle('hidden', !isSetup);
+    $('sec-key').classList.toggle('hidden', isSetup);
+    var dot = $('dot');
+    if (!st) { $('statusText').textContent = 'Starting…'; dot.style.background = 'var(--muted)'; }
+    else {
+      var text = st.statusText || '';
+      if (st.status === 'ok' && st.current) text = st.current.name + ' · ' + (st.current.charging ? 'charging' : 'connected') + (st.current.battery != null ? ' · ' + st.current.battery + '%' : '');
+      $('statusText').textContent = text;
+      dot.style.background = st.status === 'ok' ? 'var(--good)' : (st.status === 'nodevice' || st.status === 'connecting' ? 'var(--warn)' : 'var(--bad)');
+    }
+    if (isSetup) {
+      $('device').innerHTML = deviceOptions({ value: 'auto', label: 'Automatic' });
+      var known = st && st.devices.some(function (d) { return d.id === globals.device; });
+      if (globals.device !== 'auto' && !known) $('device').innerHTML += '<option value="' + esc(globals.device) + '">(not found)</option>';
+      $('device').value = globals.device;
+      $('poll').value = String(globals.poll);
+      $('receiverHint').textContent = !st ? '' : (st.receiver && st.receiver.ok ? 'Charging and a finer battery level are read from the headset\u2019s USB receiver (' + st.receiver.pid + '). Each check makes iCUE write a line in its own log; that is harmless.' : 'The receiver is not answering (' + (st.receiver ? st.receiver.note : 'waiting') + '). Charging is then only guessed from iCUE: it stops reporting a battery level while the headset charges.');
+      var rows = '', list = st ? st.devices : [];
+      for (var i = 0; i < list.length; i++) {
+        var d = list[i];
+        rows += '<tr><td>' + esc(d.name) + '</td><td class="r">' + esc(KINDS[d.kind] || 'Device') + '</td><td class="r">' + (d.present ? (d.battery != null ? d.battery + '%' : 'no battery') : 'not found') + '</td></tr>';
+      }
+      $('found').innerHTML = rows || '<tr><td>Nothing found yet.</td></tr>';
+      $('version').textContent = st ? 'iCUE ' + (st.icue || '?') + ' · iCUE Battery ' + st.version : '';
+    } else {
+      $('shows').value = settings.shows || 'auto';
+      $('join').checked = settings.join !== false;
+      $('keyDevice').innerHTML = deviceOptions({ value: 'default', label: 'Default device' });
+      $('keyDevice').value = settings.device || 'default';
+      $('low').value = settings.low || '20';
+      var role = st && st.role, hint = '';
+      if ((settings.shows || 'auto') === 'auto') hint = role ? 'Automatic picked <b>' + NAMES[role] + '</b> from where this key is' + (st.groupSize > 1 ? ' in its group of ' + st.groupSize + ' joined keys.' : '.') : 'Automatic picks from where this key is.';
+      $('showsHint').innerHTML = hint;
+      var shownRole = (settings.shows && settings.shows !== 'auto') ? settings.shows : role;
+      $('row-low').classList.toggle('hidden', shownRole !== 'battery');
+      $('lowHint').classList.toggle('hidden', shownRole !== 'battery');
+    }
+  }
+  function bind() {
+    $('device').onchange = function () { globals.device = this.value; saveGlobals(); render(); };
+    $('poll').onchange = function () { globals.poll = parseInt(this.value, 10); saveGlobals(); render(); };
+    $('rescan').onclick = function () { toPlugin({ type: 'rescan' }); };
+    $('shows').onchange = function () { if (this.value === 'auto') delete settings.shows; else settings.shows = this.value; save(); };
+    $('join').onchange = function () { settings.join = this.checked; save(); };
+    $('keyDevice').onchange = function () { if (this.value === 'default') delete settings.device; else settings.device = this.value; save(); };
+    $('low').onchange = function () { settings.low = this.value; save(); };
+  }
+  function connect(port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    try { var info = JSON.parse(actionInfo || '{}'); action = info.action || ''; settings = (info.payload && info.payload.settings) || {}; } catch (e) {}
+    bind(); render();
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    ws.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (_) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { settings = p.settings || {}; render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { readGlobals(p.settings); render(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { st = p; if (p.global) readGlobals(p.global); render(); }
+    };
+  }
+  window.connectElgatoStreamDeckSocket = connect;
+  window.connectSocket = connect;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "icue-battery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node tools/build.js",
+    "package": "node tools/build.js --zip",
+    "test": "node test/run-tests.js",
+    "icons": "node tools/make-icons.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "esbuild": "^0.28.2",
+    "ws": "^8.22.0"
+  },
+  "private": true
+}

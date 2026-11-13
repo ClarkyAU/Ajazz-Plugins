@@ -1,0 +1,43 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.icuebattery.headset",
+      "Name": "Device",
+      "Tooltip": "Battery % with a picture of the device, plus microphone and connection. Neighbouring keys join up.",
+      "Icon": "static/actions/headset.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": ["Keypad", "Information"],
+      "Settings": {},
+      "States": [{ "Image": "static/keys/headset.png", "TitleAlignment": "bottom", "FontSize": "10", "ShowTitle": false }]
+    },
+    {
+      "UUID": "com.clarkyau.icuebattery.setup",
+      "Name": "Setup",
+      "Tooltip": "Shows whether iCUE is connected and which device is used. Press to search again.",
+      "Icon": "static/actions/setup.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": ["Keypad", "Information"],
+      "Settings": {},
+      "States": [{ "Image": "static/keys/setup.png", "TitleAlignment": "bottom", "FontSize": "10", "ShowTitle": false }]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "iCUE Battery",
+  "Description": "Real battery percentage and microphone state for Corsair wireless devices (made with the HS80 MAX Wireless headset), read through iCUE.",
+  "Icon": "static/plugin.png",
+  "Category": "iCUE Battery",
+  "CategoryIcon": "static/category.png",
+  "CodePathWin": "plugin/index.js",
+  "Version": "1.0.0",
+  "URL": "https://github.com/clarkyau",
+  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "Software": { "MinimumVersion": "3.10.188.226" },
+  "Nodejs": { "Version": "20" }
+}

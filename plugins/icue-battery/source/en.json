@@ -1,0 +1,8 @@
+{
+  "Name": "iCUE Battery",
+  "Description": "Real battery percentage and microphone state for Corsair wireless devices (made with the HS80 MAX Wireless headset), read through iCUE.",
+  "Category": "iCUE Battery",
+  "com.clarkyau.icuebattery.headset": { "Name": "Device", "Tooltip": "Battery % with a picture of the device, plus microphone and connection. Neighbouring keys join up." },
+  "com.clarkyau.icuebattery.setup": { "Name": "Setup", "Tooltip": "Shows whether iCUE is connected and which device is used. Press to search again." },
+  "Localization": {}
+}
