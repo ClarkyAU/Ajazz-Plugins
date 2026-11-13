@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+// Stands in for "powershell -Command Start-Process ... -Verb RunAs" in tests:
+// writes the same progress file the real installer writes, then exits.
+const fs = require("fs");
+const cmd = process.argv[process.argv.indexOf("-Command") + 1] || "";
+const file = (/'-StatusFile','"([^"]+)"'/.exec(cmd) || [])[1];
+if (process.env.FAKE_INSTALL_CANCEL) {
+  process.stderr.write("Start-Process : This command cannot be run due to the error: The operation was canceled by the user.\n");
+  process.exit(1);
+}
+if (!file || !/'-Port','\d+'/.test(cmd) || !/-Verb RunAs/.test(cmd)) {
+  process.stderr.write("fake installer: unexpected command: " + cmd + "\n");
+  process.exit(2);
+}
+const configOnly = /'-ConfigOnly'/.test(cmd);
+if (!/'-Mode','(web|log)'/.test(cmd)) { process.stderr.write("fake installer: no -Mode\n"); process.exit(2); }
+const steps = configOnly ? ["Stopping LibreHardwareMonitor", "Turning on its web server", "Setting it to start with Windows", "Starting LibreHardwareMonitor"] : ["Downloading LibreHardwareMonitor", "Unpacking", "Copying to Program Files", "Turning on its web server", "Installing PawnIO", "Setting it to start with Windows", "Starting LibreHardwareMonitor"];
+let i = 0;
+const t = setInterval(() => {
+  if (i < steps.length) return fs.writeFileSync(file, JSON.stringify({ step: steps[i++], done: false, error: "" }));
+  clearInterval(t);
+  fs.writeFileSync(file, JSON.stringify({ step: configOnly ? "Applied" : "Installed", done: true, error: "" }));
+  process.exit(0);
+}, 120);

@@ -1,0 +1,38 @@
+{
+  "Name": "System Vitals",
+  "Description": "Live CPU, memory, GPU (NVIDIA, AMD, Intel), disk, network and sensor readings for this PC.",
+  "Category": "System Vitals",
+  "com.clarkyau.sysvitals.setup": {
+    "Name": "Setup",
+    "Tooltip": "Choose and set up the sensor app (LibreHardwareMonitor or HWiNFO) and see if it is working"
+  },
+  "com.clarkyau.sysvitals.cpu": {
+    "Name": "CPU",
+    "Tooltip": "CPU load, temperature, clock speed, cores and busiest app"
+  },
+  "com.clarkyau.sysvitals.memory": {
+    "Name": "Memory",
+    "Tooltip": "Memory used, free, committed and biggest app"
+  },
+  "com.clarkyau.sysvitals.gpu": {
+    "Name": "GPU",
+    "Tooltip": "Graphics card load, temperature, video memory, power, fan and clock (NVIDIA, AMD, Intel)"
+  },
+  "com.clarkyau.sysvitals.disk": {
+    "Name": "Disk",
+    "Tooltip": "Drive activity, read and write speed, space used and free"
+  },
+  "com.clarkyau.sysvitals.network": {
+    "Name": "Network",
+    "Tooltip": "Download and upload speed, adapter, link speed and IP address"
+  },
+  "com.clarkyau.sysvitals.system": {
+    "Name": "System",
+    "Tooltip": "Overview, uptime, battery and number of processes"
+  },
+  "com.clarkyau.sysvitals.sensor": {
+    "Name": "Sensor",
+    "Tooltip": "Any reading from HWiNFO or LibreHardwareMonitor: temperatures, fans, voltages"
+  },
+  "Localization": {}
+}

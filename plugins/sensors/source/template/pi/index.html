@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>System Vitals settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#2dd4bf; --good:#4ade80; --warn:#fbbf24; --bad:#f85149; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  h2:first-child { margin-top: 2px; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row > label { width: 96px; flex: none; color: var(--muted); }
+  .row > .grow { flex: 1; min-width: 0; }
+  input[type=text], select {
+    width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 8px; font: inherit; outline: none;
+  }
+  input:focus, select:focus { border-color: var(--accent); }
+  .check { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px 104px; }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 6px 0 8px; }
+  .hint b { color: var(--text); font-weight: 600; }
+  .hidden { display: none !important; }
+  details { margin-top: 6px; color: var(--muted); font-size: 12px; }
+  summary { cursor: pointer; color: var(--accent); }
+  ol, ul { margin: 6px 0 0 18px; padding: 0; }
+  li { margin-bottom: 3px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #10201d; border-color: var(--accent); font-weight: 600; }
+  button:disabled { opacity: .5; cursor: default; }
+  .block { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="status"><span class="dot" id="dot"></span><span class="txt" id="statusText">Starting…</span></div>
+
+  <div id="sec-setup" class="hidden">
+    <h2>Sensor source</h2>
+    <div class="row"><label>Use</label><div class="grow"><select id="source">
+      <option value="auto">Automatic (whichever is running)</option>
+      <option value="lhm">LibreHardwareMonitor</option>
+      <option value="hwinfo">HWiNFO</option>
+      <option value="none">Built-in only (no apps)</option>
+    </select></div></div>
+    <div class="hint" id="sourceHint"></div>
+
+    <div class="block" id="blk-lhm">
+      <h2>LibreHardwareMonitor</h2>
+      <div class="status"><span class="dot" id="lhmDot"></span><span class="txt" id="lhmText">Checking…</span></div>
+      <div class="row"><label>Read it through</label><div class="grow"><select id="lhmMode">
+        <option value="web">Its web server (this PC only)</option>
+        <option value="log">Its log file</option>
+      </select></div></div>
+      <div class="hint" id="lhmModeHint"></div>
+      <div class="row" id="row-lhmPort"><label>Web server port</label><div class="grow"><input type="text" id="lhmPort" placeholder="8085" spellcheck="false" maxlength="5" /></div></div>
+      <div class="btns">
+        <button class="primary" id="lhmInstall">Install LibreHardwareMonitor</button>
+        <button id="lhmApply">Apply to LibreHardwareMonitor</button>
+        <button id="lhmStart">Start it</button>
+        <button id="lhmOpen">Open it</button>
+      </div>
+      <div class="hint" id="lhmApplyHint"></div>
+      <div class="hint" id="lhmHint">Free and open source. <b>Install</b> downloads it from its official GitHub page into <b>Program Files</b>, sets it up to share readings the way chosen above, starts it with Windows (minimised to the tray) and installs <b>PawnIO</b>, the small signed driver it uses to read the CPU. Windows asks for permission once.</div>
+      <details>
+        <summary>Already using LibreHardwareMonitor?</summary>
+        <p>Install it with the button above to keep things simple, or set it up yourself:</p>
+        <ol>
+          <li><b>Web server:</b> in LibreHardwareMonitor open <b>Options › Remote Web Server</b>, tick <b>Run</b>, and make sure the port matches the one above.</li>
+          <li><b>Log file:</b> tick <b>Options › Log Sensors</b> and set the logging interval to 2 seconds. The plugin looks for the log in <b>Program Files\LibreHardwareMonitor</b>.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="block" id="blk-hwinfo">
+      <h2>HWiNFO</h2>
+      <div class="status"><span class="dot" id="hwiDot"></span><span class="txt" id="hwiText">Checking…</span></div>
+      <div class="hint">Start HWiNFO with <b>Sensors-only</b> ticked, open its <b>Settings</b> and tick <b>Shared Memory Support</b>. The free version switches this off after 12 hours until HWiNFO is restarted.</div>
+      <div class="btns"><button id="hwiSite">Open the HWiNFO website</button></div>
+    </div>
+
+    <div class="block" id="blk-none">
+      <h2>Built-in only</h2>
+      <div class="hint">No extra apps. Graphics card readings still come from the NVIDIA or AMD driver. CPU temperature is only available where the AMD driver or Windows reports it (usually laptops and Ryzen chips with built-in graphics).</div>
+    </div>
+  </div>
+
+  <div id="sec-key">
+  <h2>This key</h2>
+  <div class="row"><label>Shows</label><div class="grow"><select id="show"></select></div></div>
+  <div class="row hidden" id="opt-gpu"><label>Graphics card</label><div class="grow"><select id="gpu"></select></div></div>
+  <div class="row hidden" id="opt-drive"><label>Drive</label><div class="grow"><select id="drive"></select></div></div>
+  <div class="row hidden" id="opt-adapter"><label>Adapter</label><div class="grow"><select id="adapter"></select></div></div>
+  <div class="row hidden" id="opt-sensor"><label>Sensor</label><div class="grow"><select id="sensor"></select></div></div>
+  <div class="row hidden" id="opt-sensorFilter"><label></label><div class="grow"><input type="text" id="sensorFilter" placeholder="Type to filter the sensor list" spellcheck="false" /></div></div>
+  <div class="row hidden" id="opt-label"><label>Label</label><div class="grow"><input type="text" id="label" placeholder="Sensor name" spellcheck="false" maxlength="24" /></div></div>
+  <div class="row hidden" id="opt-tempUnit"><label>Temperature</label><div class="grow"><select id="tempUnit"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option></select></div></div>
+  <div class="row hidden" id="opt-diskUnits"><label>Speed in</label><div class="grow"><select id="diskUnits"><option value="bytes">Bytes (MB/s)</option><option value="bits">Bits (Mb/s)</option></select></div></div>
+  <div class="row hidden" id="opt-netUnits"><label>Speed in</label><div class="grow"><select id="netUnits"><option value="bits">Bits (Mb/s)</option><option value="bytes">Bytes (MB/s)</option></select></div></div>
+  <div class="row" id="opt-graphTime"><label>Graph covers</label><div class="grow"><select id="graphTime"><option value="60">1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option><option value="600">10 minutes</option></select></div></div>
+  <div class="row"><label>When pressed</label><div class="grow"><select id="press"></select></div></div>
+  <label class="check"><input type="checkbox" id="join" /> Join with neighbouring keys</label>
+  <div class="hint" id="hint"></div>
+  <div class="hint hidden" id="source"></div>
+  <details id="helpSensors" class="hidden">
+    <summary>CPU temperature, fans and other sensors</summary>
+    <p>Windows does not share CPU temperatures with apps on its own. If one of these free apps is running, this plugin reads from it automatically:</p>
+    <ul>
+      <li><b>HWiNFO</b> — in its Settings, tick <b>Shared Memory Support</b>. (The free version turns this off after 12 hours; restart HWiNFO to continue.)</li>
+      <li><b>LibreHardwareMonitor</b> — just leave it running (start it as administrator so it can read the CPU).</li>
+    </ul>
+    <p>Graphics card temperatures do not need either app: they come from the NVIDIA or AMD driver, or from Windows for other cards.</p>
+    <p>Choose and set up the app on the <b>Setup</b> key.</p>
+  </details>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ws = null, uuid = '', action = '', settings = {}, st = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var kind = function () { return String(action).split('.').pop(); };
+
+  var PRESS_BASE = [['taskmgr', 'Open Task Manager'], ['resmon', 'Open Resource Monitor'], ['none', 'Do nothing']];
+  var KINDS = {
+    cpu: {
+      show: [['', 'Automatic'], ['load', 'Load'], ['temp', 'Temperature'], ['clock', 'Clock speed'], ['power', 'Power'], ['cores', 'Cores'], ['graph', 'Graph'], ['top', 'Busiest app']],
+      opts: ['tempUnit', 'graphTime'], press: PRESS_BASE, sensors: true,
+      hint: '<b>Automatic</b>: one key shows the load. A row adds temperature, clock speed and a graph; a block puts a graph underneath (and the cores on a third row). Neighbouring <b>Graph</b> or <b>Cores</b> keys share one picture.'
+    },
+    memory: {
+      show: [['', 'Automatic'], ['used', 'Used (percent)'], ['amount', 'Amount used'], ['avail', 'Free'], ['commit', 'Committed'], ['graph', 'Graph'], ['top', 'Biggest app']],
+      opts: ['graphTime'], press: PRESS_BASE,
+      hint: '<b>Automatic</b>: one key shows how full the memory is. A row adds the amount used and a graph. Neighbouring <b>Graph</b> keys share one graph.'
+    },
+    gpu: {
+      show: [['', 'Automatic'], ['load', 'Load'], ['temp', 'Temperature'], ['hot', 'Hot spot'], ['vram', 'Video memory'], ['power', 'Power'], ['fan', 'Fan'], ['clock', 'Clock speed'], ['graph', 'Graph']],
+      opts: ['gpu', 'tempUnit', 'graphTime'], press: PRESS_BASE,
+      hint: '<b>Automatic</b>: one key shows the load with the temperature. A row adds temperature, video memory and a graph. Neighbouring <b>Graph</b> keys share one graph.'
+    },
+    disk: {
+      show: [['', 'Automatic'], ['activity', 'Activity'], ['read', 'Read speed'], ['write', 'Write speed'], ['rw', 'Read + write'], ['space', 'Space used'], ['free', 'Free space'], ['graph', 'Graph']],
+      opts: ['drive', 'diskUnits', 'graphTime'], press: [['taskmgr', 'Open Task Manager'], ['drive', 'Open the drive'], ['resmon', 'Open Resource Monitor'], ['none', 'Do nothing']],
+      hint: '<b>Automatic</b>: one key shows how busy the drive is. A row adds read and write speed and a graph. Neighbouring <b>Graph</b> keys share one graph.'
+    },
+    network: {
+      show: [['', 'Automatic'], ['both', 'Download + upload'], ['down', 'Download'], ['up', 'Upload'], ['link', 'Adapter and link speed'], ['ip', 'IP address'], ['graph', 'Graph']],
+      opts: ['adapter', 'netUnits', 'graphTime'], press: [['taskmgr', 'Open Task Manager'], ['netsettings', 'Open network settings'], ['resmon', 'Open Resource Monitor'], ['none', 'Do nothing']],
+      hint: '<b>Automatic</b>: one key shows download and upload. A row shows download, upload and a graph. Neighbouring <b>Graph</b> keys share one graph.'
+    },
+    system: {
+      show: [['', 'Automatic'], ['summary', 'Overview (CPU, RAM, GPU)'], ['uptime', 'Uptime'], ['battery', 'Battery'], ['procs', 'Processes'], ['graph', 'Graph']],
+      opts: ['graphTime'], press: [['taskmgr', 'Open Task Manager'], ['power', 'Open power settings'], ['resmon', 'Open Resource Monitor'], ['none', 'Do nothing']],
+      hint: '<b>Automatic</b>: one key shows an overview. A row adds uptime, battery (on laptops) and processes. Neighbouring <b>Graph</b> keys share one graph.'
+    },
+    sensor: {
+      show: [['', 'Automatic'], ['value', 'Value'], ['graph', 'Graph']],
+      opts: ['sensor', 'sensorFilter', 'label', 'tempUnit', 'graphTime'], press: [['none', 'Do nothing'], ['taskmgr', 'Open Task Manager']], sensors: true,
+      hint: 'Shows any reading from <b>HWiNFO</b> or <b>LibreHardwareMonitor</b>: CPU temperature, fan speeds, voltages, power. <b>Automatic</b>: the first key shows the value, keys next to it a graph.'
+    }
+  };
+  KINDS.setup = { show: [['', 'Status']], opts: [], press: [['none', '']], hint: '' };
+  var globals = { source: 'auto', lhmPort: 8085, lhmMode: 'web' };
+  var MODE_HINT = {
+    web: 'Lightest option. LibreHardwareMonitor answers the plugin through a small web server that only programs on this PC can reach.',
+    log: 'No web server. LibreHardwareMonitor writes all readings to a file every 2 seconds and the plugin reads the newest line. One file a day (about 50 MB at 2 seconds); files older than 2 days are deleted automatically.'
+  };
+  function readGlobals(g) { g = g || {}; globals = { source: g.source || 'auto', lhmPort: g.lhmPort || 8085, lhmMode: g.lhmMode === 'log' ? 'log' : 'web' }; }
+  function saveGlobals() {
+    send({ event: 'setGlobalSettings', context: uuid, payload: globals });
+    toPlugin({ type: 'global', settings: globals });
+  }
+  var ALL_OPTS = ['gpu', 'drive', 'adapter', 'sensor', 'sensorFilter', 'label', 'tempUnit', 'diskUnits', 'netUnits', 'graphTime'];
+  var DEFAULTS = { tempUnit: 'C', diskUnits: 'bytes', netUnits: 'bits', graphTime: '120' };
+
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function save() {
+    send({ event: 'setSettings', context: uuid, payload: settings });
+    toPlugin({ type: 'settings', settings: settings });
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function fill(sel, items, value, missingLabel) {
+    var html = '', found = false, groups = {};
+    items.forEach(function (it) {
+      if (it[0] === (value || '')) found = true;
+      var opt = '<option value="' + esc(it[0]) + '">' + esc(it[1]) + '</option>';
+      if (it[2]) { (groups[it[2]] = groups[it[2]] || []).push(opt); } else html += opt;
+    });
+    Object.keys(groups).forEach(function (g) { html += '<optgroup label="' + esc(g) + '">' + groups[g].join('') + '</optgroup>'; });
+    if (!found && value) html += '<option value="' + esc(value) + '">' + esc(missingLabel || value) + ' (not found)</option>';
+    sel.innerHTML = html;
+    sel.value = value || '';
+  }
+
+  function gb(n) { return n ? (n >= 1e12 ? (n / 1099511627776).toFixed(1) + ' TB' : Math.round(n / 1073741824) + ' GB') : ''; }
+
+  var lastSig = '';
+  function render() {
+    var k = kind();
+    $('sec-setup').classList.toggle('hidden', k !== 'setup');
+    $('sec-key').classList.toggle('hidden', k === 'setup');
+    if (k === 'setup') { renderSetup(); return; }
+    var def = KINDS[k] || KINDS.system;
+    ALL_OPTS.forEach(function (o) { $('opt-' + o).classList.toggle('hidden', def.opts.indexOf(o) < 0); });
+    $('hint').innerHTML = def.hint;
+    $('helpSensors').classList.toggle('hidden', !(def.sensors || k === 'gpu'));
+    $('join').checked = settings.join !== false;
+    ['tempUnit', 'diskUnits', 'netUnits', 'graphTime'].forEach(function (o) { $(o).value = String(settings[o] || DEFAULTS[o]); });
+    if (document.activeElement !== $('label')) $('label').value = settings.label || '';
+    var s = st || {};
+    var filter = ($('sensorFilter').value || '').toLowerCase();
+    var sig = JSON.stringify([k, s.gpus, s.drives, s.adapters, (s.sensors || []).length, filter, settings.show, settings.gpu, settings.drive, settings.adapter, settings.sensor, settings.press]);
+    if (sig !== lastSig) {
+      lastSig = sig;
+      fill($('show'), def.show, settings.show || '');
+      fill($('press'), def.press, settings.press || def.press[0][0]);
+      var gpus = (s.gpus || []).map(function (g) { return [g.id, g.name + (g.integrated ? ' (integrated)' : '')]; });
+      gpus.unshift(['', 'Automatic (main card)']);
+      fill($('gpu'), gpus, settings.gpu || '', 'Graphics card');
+      var drives = (s.drives || []).map(function (d) { return [d.id, d.id + (d.label ? ' ' + d.label : '') + (d.total ? ' — ' + gb(d.total) : '')]; });
+      drives.unshift(['*', 'All drives']);
+      drives.unshift(['', 'Automatic (' + (s.systemDrive || 'C:') + ', Windows drive)']);
+      fill($('drive'), drives, settings.drive || '', settings.drive);
+      var ad = (s.adapters || []).filter(function (a) { return a.up || a.id === settings.adapter; }).map(function (a) { return [a.id, a.name + (a.desc && a.desc !== a.name ? ' — ' + a.desc : '') + (a.up ? '' : ' (disconnected)')]; });
+      ad.unshift(['*', 'All adapters added up']);
+      ad.unshift(['', 'Automatic (the one in use)']);
+      fill($('adapter'), ad, settings.adapter || '', 'Adapter');
+      var sens = (s.sensors || []).filter(function (x) {
+        return !filter || x.id === settings.sensor || (x.hw + ' ' + x.name).toLowerCase().indexOf(filter) >= 0;
+      }).map(function (x) { return [x.id, x.name + (x.unit ? ' (' + x.unit + ')' : ''), (x.hw || 'Other') + (x.src ? ' — ' + x.src : '')]; });
+      sens.unshift(['', (s.sensors || []).length ? 'Choose a sensor…' : 'No sensors yet: finish the Setup key']);
+      fill($('sensor'), sens, settings.sensor || '', 'Sensor');
+    }
+    showSource(k, s);
+  }
+
+  var SRC_HINT = {
+    auto: 'Uses whichever sensor app is running: LibreHardwareMonitor first, then HWiNFO, then the graphics driver and Windows.',
+    lhm: 'Only LibreHardwareMonitor (plus the built-in graphics driver readings).',
+    hwinfo: 'Only HWiNFO (plus the built-in graphics driver readings).',
+    none: 'No extra apps.'
+  };
+  function setDot(id, c) { $(id).style.background = c; }
+  function renderSetup() {
+    var s = (st && st.setup) || {};
+    var src = globals.source || 'auto';
+    if (document.activeElement !== $('source')) $('source').value = src;
+    if (document.activeElement !== $('lhmPort')) $('lhmPort').value = String(globals.lhmPort || 8085);
+    $('sourceHint').textContent = SRC_HINT[src] || '';
+    $('blk-lhm').classList.toggle('hidden', !(src === 'auto' || src === 'lhm'));
+    $('blk-hwinfo').classList.toggle('hidden', !(src === 'auto' || src === 'hwinfo'));
+    $('blk-none').classList.toggle('hidden', src !== 'none');
+    if (document.activeElement !== $('lhmMode')) $('lhmMode').value = globals.lhmMode;
+    $('lhmModeHint').textContent = MODE_HINT[globals.lhmMode];
+    $('row-lhmPort').classList.toggle('hidden', globals.lhmMode !== 'web');
+    var l = s.lhm || {}, ins = l.installing, t, c;
+    var how = globals.lhmMode === 'log' ? 'log file' : 'web server';
+    if (ins && !ins.done) { t = ins.step + '…'; c = 'var(--accent)'; }
+    else if (l.connected) { t = 'Running · reading its ' + how + ' · ' + l.count + ' sensors'; c = 'var(--good)'; }
+    else if (l.running && l.count) { t = 'Running · read through Windows (WMI) · ' + l.count + ' sensors'; c = 'var(--good)'; }
+    else if (l.running) { t = 'Running, but its ' + how + ' is not available' + (l.error ? ' (' + l.error + ')' : ''); c = 'var(--warn)'; }
+    else if (l.installed) { t = 'Installed, not running'; c = 'var(--warn)'; }
+    else { t = 'Not installed'; c = 'var(--muted)'; }
+    if (ins && ins.done && ins.error) { t = (ins.what === 'apply' ? 'Not applied: ' : 'Install failed: ') + ins.error; c = 'var(--bad)'; }
+    else if (ins && ins.done && !ins.error && !l.connected) { t = (ins.what === 'apply' ? 'Applied' : 'Installed') + ', starting up…'; c = 'var(--accent)'; }
+    $('lhmText').textContent = t; setDot('lhmDot', c);
+    var busy = !!(ins && !ins.done);
+    $('lhmInstall').disabled = busy;
+    $('lhmApply').disabled = busy;
+    $('lhmInstall').textContent = l.installed ? 'Reinstall / update' : 'Install LibreHardwareMonitor';
+    // LibreHardwareMonitor's own settings don't match the choice above: offer to apply them
+    var cfg = l.config, mismatch = false;
+    if (l.installed && cfg) mismatch = globals.lhmMode === 'web' ? (!cfg.web || cfg.port !== Number(globals.lhmPort)) : !cfg.log;
+    $('lhmApply').classList.toggle('hidden', !(l.installed && mismatch));
+    $('lhmApplyHint').classList.toggle('hidden', !(l.installed && mismatch));
+    $('lhmApplyHint').innerHTML = 'LibreHardwareMonitor is set to ' + (cfg && cfg.web ? 'its web server' : cfg && cfg.log ? 'its log file' : 'neither') + '. Press <b>Apply</b> to switch it to the choice above (Windows asks for permission; it restarts LibreHardwareMonitor).';
+    $('lhmStart').classList.toggle('hidden', !(l.installed && !l.running));
+    $('lhmOpen').classList.toggle('hidden', !(l.connected && globals.lhmMode === 'web'));
+    var h = s.hwinfo || {};
+    if (h.count) { $('hwiText').textContent = 'Sharing ' + h.count + ' sensors'; setDot('hwiDot', 'var(--good)'); }
+    else if (h.running) { $('hwiText').textContent = 'Running, but Shared Memory Support is off'; setDot('hwiDot', 'var(--warn)'); }
+    else { $('hwiText').textContent = 'Not running'; setDot('hwiDot', 'var(--muted)'); }
+  }
+
+  function showSource(k, s) {
+    var el = $('source'), html = '';
+    if (k === 'cpu') {
+      html = s.cpuTemp ? 'CPU temperature: from <b>' + esc(s.cpuTemp.src) + '</b>.' : 'CPU temperature and power: <b>not available</b>. Add the <b>Setup</b> key from the System Vitals group to choose a sensor app.';
+      if (s.cpu && s.cpu.name) html = esc(s.cpu.name) + ' · ' + s.cpu.threads + ' threads<br>' + html;
+    } else if (k === 'gpu') {
+      var names = { nvidia: 'NVIDIA driver', amd: 'AMD driver', windows: 'Windows' };
+      html = (s.gpus || []).map(function (g) {
+        return esc(g.name) + ': temperature ' + (g.hasTemp ? 'from <b>' + (names[g.tempSrc] || 'driver') + '</b>' : '<b>not available</b>');
+      }).join('<br>');
+    } else if (k === 'sensor') {
+      html = s.sensorSource ? 'Reading <b>' + (s.sensors || []).length + '</b> sensors from <b>' + esc(s.sensorSource) + '</b>.' : 'No sensor app found. Use the <b>Setup</b> key to install or choose one.';
+    } else if (k === 'system' && st && !s.hasBattery) {
+      html = 'No battery on this PC, so <b>Automatic</b> skips the battery.';
+    }
+    el.innerHTML = html;
+    el.classList.toggle('hidden', !html);
+  }
+
+  function showStatus(s) {
+    var c = s.status === 'running' ? 'var(--good)' : s.status === 'error' ? 'var(--warn)' : 'var(--accent)';
+    $('dot').style.background = c;
+    var t = s.status === 'running' ? 'Reading this PC' : s.status === 'error' ? (s.statusText || 'Not reading') + ' — see plugin.log' : 'Starting…';
+    $('statusText').textContent = t;
+  }
+
+  function bind(id, key, isCheck) {
+    $(id).addEventListener('change', function () { settings[key] = isCheck ? this.checked : this.value; save(); render(); });
+  }
+  ['show', 'gpu', 'drive', 'adapter', 'sensor', 'tempUnit', 'diskUnits', 'netUnits', 'graphTime', 'press'].forEach(function (k) { bind(k, k); });
+  bind('join', 'join', true);
+  var labelTimer = null;
+  $('label').addEventListener('input', function () {
+    var v = this.value;
+    clearTimeout(labelTimer);
+    labelTimer = setTimeout(function () { settings.label = v.trim(); save(); }, 500);
+  });
+  $('sensorFilter').addEventListener('input', function () { render(); });
+  $('source').addEventListener('change', function () { globals.source = this.value; saveGlobals(); render(); });
+  var portTimer = null;
+  $('lhmPort').addEventListener('input', function () {
+    var v = parseInt(this.value, 10);
+    clearTimeout(portTimer);
+    if (v > 0 && v < 65536) portTimer = setTimeout(function () { globals.lhmPort = v; saveGlobals(); }, 700);
+  });
+  $('lhmMode').addEventListener('change', function () { globals.lhmMode = this.value; saveGlobals(); render(); });
+  $('lhmApply').addEventListener('click', function () { toPlugin({ type: 'lhm-apply' }); this.disabled = true; $('lhmText').textContent = 'Waiting for Windows permission…'; });
+  $('lhmInstall').addEventListener('click', function () { toPlugin({ type: 'lhm-install' }); this.disabled = true; $('lhmText').textContent = 'Waiting for Windows permission…'; });
+  $('lhmStart').addEventListener('click', function () { toPlugin({ type: 'lhm-start' }); });
+  $('lhmOpen').addEventListener('click', function () { send({ event: 'openUrl', payload: { url: 'http://127.0.0.1:' + (globals.lhmPort || 8085) + '/' } }); });
+  $('hwiSite').addEventListener('click', function () { toPlugin({ type: 'open', url: 'https://www.hwinfo.com/download/' }); });
+
+  function connect(port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    try {
+      var info = JSON.parse(actionInfo || '{}');
+      action = info.action || '';
+      settings = (info.payload && info.payload.settings) || {};
+    } catch (e) {}
+    render();
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    ws.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (_) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { settings = p.settings || {}; render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { readGlobals(p.settings); render(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { st = p; if (p.global) readGlobals(p.global); showStatus(p); render(); }
+    };
+  }
+  window.connectElgatoStreamDeckSocket = connect;
+  window.connectSocket = connect;
+})();
+</script>
+</body>
+</html>

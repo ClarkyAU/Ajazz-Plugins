@@ -1,0 +1,19 @@
+{
+  "name": "com.clarkyau.sysvitals",
+  "version": "1.2.0",
+  "private": true,
+  "description": "System Vitals plugin for the Ajazz AKP153E (Stream Dock software)",
+  "author": "clarkyau",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/build.js && node test/run-tests.js",
+    "package": "node scripts/package.js"
+  },
+  "dependencies": {
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "esbuild": "0.24.0"
+  }
+}

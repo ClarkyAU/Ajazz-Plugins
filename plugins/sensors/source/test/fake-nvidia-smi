@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+// Stands in for nvidia-smi in tests: prints the queried fields in a loop.
+const q = (process.argv.find((a) => a.startsWith("--query-gpu=")) || "").slice(12).split(",");
+const t0 = Date.now();
+const vals = {
+  "pci.bus_id": () => "00000000:01:00.0",
+  "temperature.gpu": () => String(Math.round(55 + 10 * Math.sin((Date.now() - t0) / 3000))),
+  "power.draw": () => (60 + 40 * Math.random()).toFixed(2),
+  "power.limit": () => "120.00",
+  "fan.speed": () => "[N/A]",
+  "clocks.gr": () => "1708",
+  "clocks.mem": () => "4006",
+};
+const bad = q.find((f) => !vals[f]);
+if (bad) { console.log(`Field "${bad}" is not a valid field to query.`); process.exit(2); }
+const line = () => console.log(q.map((f) => vals[f]()).join(", "));
+line();
+setInterval(line, 300);

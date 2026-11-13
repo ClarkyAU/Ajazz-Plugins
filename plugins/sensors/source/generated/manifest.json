@@ -1,0 +1,210 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.sysvitals.setup",
+      "Name": "Setup",
+      "Tooltip": "Choose and set up the sensor app (LibreHardwareMonitor or HWiNFO) and see if it is working",
+      "Icon": "static/actions/setup.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/setup.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.cpu",
+      "Name": "CPU",
+      "Tooltip": "CPU load, temperature, clock speed, cores and busiest app",
+      "Icon": "static/actions/cpu.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/cpu.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.memory",
+      "Name": "Memory",
+      "Tooltip": "Memory used, free, committed and biggest app",
+      "Icon": "static/actions/memory.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/memory.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.gpu",
+      "Name": "GPU",
+      "Tooltip": "Graphics card load, temperature, video memory, power, fan and clock (NVIDIA, AMD, Intel)",
+      "Icon": "static/actions/gpu.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/gpu.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.disk",
+      "Name": "Disk",
+      "Tooltip": "Drive activity, read and write speed, space used and free",
+      "Icon": "static/actions/disk.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/disk.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.network",
+      "Name": "Network",
+      "Tooltip": "Download and upload speed, adapter, link speed and IP address",
+      "Icon": "static/actions/network.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/network.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.system",
+      "Name": "System",
+      "Tooltip": "Overview, uptime, battery and number of processes",
+      "Icon": "static/actions/system.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/system.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    },
+    {
+      "UUID": "com.clarkyau.sysvitals.sensor",
+      "Name": "Sensor",
+      "Tooltip": "Any reading from HWiNFO or LibreHardwareMonitor: temperatures, fans, voltages",
+      "Icon": "static/actions/sensor.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/sensor.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "System Vitals",
+  "Description": "Live CPU, memory, GPU (NVIDIA, AMD, Intel), disk, network and sensor readings for this PC.",
+  "Icon": "static/plugin.png",
+  "Category": "System Vitals",
+  "CategoryIcon": "static/category.png",
+  "CodePathWin": "plugin/index.js",
+  "Version": "1.2.0",
+  "URL": "https://github.com/clarkyau",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "3.10.188.226"
+  },
+  "Nodejs": {
+    "Version": "20"
+  }
+}
