@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Home Settings</title>
+<style>
+  :root {
+    --bg: #2d2d2d; --panel: #363636; --line: #444; --text: #e8e8ea; --muted: #9a9aa2;
+    --accent: #ffb448; --seg: #262626; --seg-on: #4a4a52; --ok: #5fd38d; --bad: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body { font: 12px/1.4 "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; padding: 8px 10px 14px; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+  .head { display: flex; align-items: baseline; gap: 8px; margin: 2px 2px 8px; }
+  .head b { font-size: 13px; font-weight: 600; }
+  .head span { color: var(--muted); }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; margin-bottom: 6px; }
+  summary { list-style: none; cursor: pointer; padding: 7px 10px; font-weight: 600; display: flex; align-items: center; gap: 6px; user-select: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: ""; border-left: 5px solid var(--muted); border-top: 4px solid transparent; border-bottom: 4px solid transparent; transition: transform .15s; }
+  details[open] > summary::before { transform: rotate(90deg); }
+  summary .tag { margin-left: auto; font-weight: 400; color: var(--muted); font-size: 11px; }
+  .rows { padding: 2px 10px 8px; }
+  .row { display: flex; align-items: center; min-height: 30px; gap: 10px; }
+  .row + .row { border-top: 1px solid #3e3e3e; }
+  .row > label { flex: 0 0 34%; color: var(--muted); }
+  .row > .ctl { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+  .seg { display: flex; background: var(--seg); border-radius: 5px; padding: 2px; gap: 2px; flex-wrap: wrap; }
+  .seg button { border: 0; background: transparent; color: var(--muted); font: inherit; padding: 3px 9px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+  .seg button:hover { color: var(--text); }
+  .seg button.on { background: var(--seg-on); color: #fff; }
+  select, input[type="text"], input[type="password"] { flex: 1; min-width: 0; background: var(--seg); color: var(--text); border: 1px solid #4a4a4a; border-radius: 4px; padding: 4px 6px; font: inherit; outline: none; }
+  select:focus, input:focus { border-color: #777; }
+  input[type="color"] { -webkit-appearance: none; appearance: none; width: 34px; height: 22px; border: 1px solid #555; border-radius: 4px; padding: 0; background: none; cursor: pointer; }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+  input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+  .hint { color: var(--muted); font-size: 11px; padding: 0 0 6px 34%; margin-left: 10px; margin-top: -2px; }
+  .hint.wide { padding-left: 0; margin-left: 0; }
+  .hidden { display: none !important; }
+  .btn { border: 1px solid #555; background: #3c3c42; color: var(--text); font: inherit; padding: 4px 10px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+  .btn:hover { border-color: #777; }
+  .btn.primary { background: #5a4a2a; border-color: #8a6a32; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .link { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  .status { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #666; margin-top: 4px; flex: none; }
+  .dot.ok { background: var(--ok); } .dot.working, .dot.cached { background: var(--accent); } .dot.error, .dot.expired { background: var(--bad); }
+  .msg { flex: 1; } .msg.err { color: #ff9a9a; }
+  .notice { background: #44392a; border: 1px solid #6e5a35; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; }
+  .devs { margin: 2px 0 0; padding: 0; list-style: none; }
+  .devs li { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-top: 1px solid #3e3e3e; }
+  .devs li:first-child { border-top: 0; }
+  .devs .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .devs .nm small { color: var(--muted); margin-left: 6px; }
+  .devs .lk { color: var(--muted); font-size: 11px; white-space: nowrap; }
+  .devs .lk.ok { color: var(--ok); } .devs .lk.bad { color: #ff9a9a; }
+  ol.steps { margin: 4px 0 6px 16px; padding: 0; color: var(--muted); font-size: 11px; }
+  ol.steps li { margin: 2px 0; }
+</style>
+</head>
+<body>
+  <div class="head"><b>Smart Home</b><span id="thisKey"></span></div>
+
+  <div class="notice hidden" id="needSetup">Add the <b>Setup</b> key from the Smart Home list to your deck first. It's where your Tuya account goes.</div>
+
+  <!-- ===================== Setup key only ===================== -->
+  <details id="sec-account" class="for-setup" open>
+    <summary>Tuya account <span class="tag" id="accountTag"></span></summary>
+    <div class="rows">
+      <div class="status"><span class="dot" id="dot"></span><span class="msg" id="message">Not set up yet</span></div>
+      <div class="row"><label for="accessId">Access ID</label><div class="ctl"><input type="text" id="accessId" spellcheck="false" autocomplete="off" placeholder="From iot.tuya.com"></div></div>
+      <div class="row"><label for="accessSecret">Access Secret</label><div class="ctl"><input type="password" id="accessSecret" spellcheck="false" autocomplete="off" placeholder="From iot.tuya.com"></div></div>
+      <div class="row"><label for="region">Data centre</label><div class="ctl"><select id="region">
+        <option value="auto">Auto (tries each)</option>
+        <option value="eu">Central Europe (Australia)</option>
+        <option value="weu">Western Europe</option>
+        <option value="us">Western America</option>
+        <option value="ueaz">Eastern America</option>
+        <option value="sg">Singapore</option>
+        <option value="in">India</option>
+        <option value="cn">China</option>
+      </select></div></div>
+      <div class="row"><label></label><div class="ctl">
+        <button class="btn primary" id="connect">Save &amp; connect</button>
+        <button class="btn" id="refresh">Refresh devices</button>
+      </div></div>
+      <div class="hint wide">Only used to fetch your device list. The keys then talk to your devices directly over your home Wi-Fi. <span class="link" id="help">Where do I find these?</span></div>
+      <ol class="steps hidden" id="helpSteps">
+        <li>Sign in at <span class="link" id="openTuya">iot.tuya.com</span>, then Cloud &gt; Development &gt; your project.</li>
+        <li>Overview tab: copy the Access ID / Client ID and the Access Secret / Client Secret.</li>
+        <li>Devices tab: Link Tuya App Account, then scan the QR code in the Smart Life app (Me &gt; scan icon).</li>
+      </ol>
+      <div class="row"><label></label><div class="ctl"><button class="btn" id="signout">Forget these details</button></div></div>
+    </div>
+  </details>
+
+  <details id="sec-devices" class="for-setup">
+    <summary>Devices <span class="tag" id="devCount"></span></summary>
+    <div class="rows">
+      <ul class="devs" id="devList"></ul>
+      <div class="hint wide">"Home network" is fast and works without the internet. "Cloud" goes through Tuya until the device is found on your network.</div>
+    </div>
+  </details>
+
+  <!-- ===================== every key ===================== -->
+  <details id="sec-key" open>
+    <summary>This key</summary>
+    <div class="rows">
+      <div class="row for-device"><label for="device">Device</label><div class="ctl"><select id="device"></select></div></div>
+      <div class="row for-device" id="outletRow"><label for="outlet">Outlet</label><div class="ctl"><select id="outlet"></select></div></div>
+      <div class="row"><label for="show">Shows</label><div class="ctl"><select id="show"></select></div></div>
+      <div class="hint" id="showHint">Automatic picks from where the key sits in its group.</div>
+      <div class="row"><label>Join with neighbouring keys</label><div class="ctl"><div class="seg" data-key="join"><button data-v="yes">Join</button><button data-v="no">Stand alone</button></div></div></div>
+      <div class="hint" id="joinHint">Keys side by side for the same device join into one display.</div>
+      <div class="row for-device"><label for="label">Name on key</label><div class="ctl"><input type="text" id="label" maxlength="60" placeholder="Device name"></div></div>
+      <div class="row" id="iconRow"><label>Icon</label><div class="ctl"><div class="seg" data-key="icon">
+        <button data-v="auto">Auto</button><button data-v="power">Power</button><button data-v="plug">Plug</button><button data-v="switch">Switch</button><button data-v="bulb">Bulb</button><button data-v="fan">Fan</button>
+      </div></div></div>
+      <div class="row for-device"><label>Colour</label><div class="ctl">
+        <div class="seg" id="colorMode"><button data-v="auto">Auto</button><button data-v="custom">Custom</button></div>
+        <input type="color" id="keyColor" title="Colour for this key">
+      </div></div>
+      <div class="hint for-device" id="colorHint">Auto: lights use the bulb's own colour, everything else is amber.</div>
+      <div class="row"><label>Style</label><div class="ctl"><div class="seg" data-key="style"><button data-v="glow">Glow</button><button data-v="flat">Flat</button></div></div></div>
+      <div class="row" id="pressRow"><label>Pressing</label><div class="ctl"><div class="seg" data-key="press"><button data-v="none">Does nothing</button><button data-v="toggle">Turns it on/off</button></div></div></div>
+      <div class="row for-device"><label>Test</label><div class="ctl"><button class="btn" id="identify">Flash the device</button></div></div>
+    </div>
+  </details>
+
+  <details id="sec-advanced" class="for-setup">
+    <summary>Advanced</summary>
+    <div class="rows">
+      <div class="row"><label>Key positions</label><div class="ctl"><div class="seg" id="keyLayout"><button data-v="auto">Auto</button><button data-v="akp153">AKP153</button><button data-v="standard">Standard</button></div></div></div>
+      <div class="hint">Only change this if joined keys land on the wrong keys.</div>
+    </div>
+  </details>
+
+<script>
+(function () {
+  'use strict';
+  var DEFAULT_GLOBALS = { accessId: '', accessSecret: '', region: 'auto', keyLayout: 'auto' };
+  var DEFAULT_KEY = { v: 2, deviceId: '', dp: '', show: 'auto', join: true, label: '', icon: 'auto', color: '', style: 'glow', press: 'none' };
+  var NAMES = { setup: 'Setup', 'switch': 'Switch', light: 'Light', brightness: 'Brightness', power: 'Power Use' };
+  var SHOWS = {
+    setup: [['auto', 'Automatic'], ['status', 'Connection status'], ['devices', 'Number of devices']],
+    'switch': [['auto', 'Automatic'], ['button', 'Icon and name'], ['icon', 'Icon only'], ['name', 'Name'], ['state', 'On / Off'], ['watts', 'Watts (energy meter)']],
+    light: [['auto', 'Automatic'], ['button', 'Icon and name'], ['icon', 'Icon only'], ['name', 'Name'], ['state', 'On / Off'], ['level', 'Brightness level']],
+    brightness: [['auto', 'Automatic'], ['slider', 'Slider'], ['level', 'Brightness level'], ['name', 'Name']],
+    power: [['auto', 'Automatic'], ['watts', 'Watts'], ['graph', 'Graph'], ['name', 'Name'], ['state', 'On / Off']]
+  };
+  var SHOW_HINT = {
+    setup: 'Automatic: status on the first key, device count next to it.',
+    'switch': 'Automatic: icon on the first key, the name across the next keys (watts on the third, for plugs with a meter).',
+    light: 'Automatic: icon on the first key, the name across the next keys (brightness on the third).',
+    brightness: 'Automatic: level on the first key, a slider across the rest. Each slider key jumps to its own level.',
+    power: 'Automatic: watts on the first key, a graph across the rest. Neighbouring Graph keys share one graph.'
+  };
+  var LINK = { local: ['Home network', 'ok'], cloud: ['Cloud', ''], searching: ['Looking on network…', ''], connecting: ['Connecting…', ''], offline: ['Offline', 'bad'], nokey: ['No key', 'bad'] };
+
+  var socket = null, uuid = null, action = null, kind = '';
+  var G = Object.assign({}, DEFAULT_GLOBALS);
+  var K = Object.assign({}, DEFAULT_KEY);
+  var state = { devices: [], account: { state: 'none', message: 'Not set up yet' }, hasCreds: false, setupVisible: false };
+  var $ = function (id) { return document.getElementById(id); };
+  function send(obj) { if (socket && socket.readyState === 1) socket.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function saveKey() { send({ event: 'setSettings', context: uuid, payload: K }); }
+  var gTimer = null;
+  function saveGlobals() {
+    toPlugin({ type: 'globals', settings: { accessId: G.accessId, accessSecret: G.accessSecret, region: G.region, keyLayout: G.keyLayout } });
+    clearTimeout(gTimer);
+    gTimer = setTimeout(function () { send({ event: 'setGlobalSettings', context: uuid, payload: G }); }, 250);
+  }
+
+  function suits(d) {
+    if (kind === 'light') return d.isLight;
+    if (kind === 'brightness') return d.dimmable;
+    if (kind === 'power') return d.hasPower;
+    return true;
+  }
+
+  // ---------- this key
+  function renderKey() {
+    var isSetup = kind === 'setup';
+    document.querySelectorAll('.for-setup').forEach(function (el) { el.classList.toggle('hidden', !isSetup); });
+    document.querySelectorAll('.for-device').forEach(function (el) { el.classList.toggle('hidden', isSetup); });
+    $('needSetup').classList.toggle('hidden', isSetup || state.hasCreds || (state.devices || []).length > 0);
+
+    var shows = SHOWS[kind] || SHOWS['switch'];
+    var sh = $('show'); sh.innerHTML = '';
+    shows.forEach(function (o) { sh.add(new Option(o[1], o[0])); });
+    sh.value = shows.some(function (o) { return o[0] === K.show; }) ? K.show : 'auto';
+    $('showHint').textContent = SHOW_HINT[kind] || '';
+    $('joinHint').textContent = isSetup ? 'Setup keys side by side join up too.' : 'Keys side by side for the same device join into one display.';
+    $('iconRow').classList.toggle('hidden', !(kind === 'switch' || kind === 'light'));
+    $('pressRow').classList.toggle('hidden', kind !== 'power');
+    document.querySelectorAll('.seg[data-key]').forEach(function (seg) {
+      var key = seg.dataset.key;
+      var v = key === 'join' ? (K.join === false ? 'no' : 'yes') : K[key];
+      seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
+    });
+    if (isSetup) return;
+
+    var sel = $('device'), devs = state.devices || [];
+    sel.innerHTML = '';
+    var fits = devs.filter(suits), others = devs.filter(function (d) { return !suits(d); });
+    if (!devs.length) {
+      sel.add(new Option(state.hasCreds ? 'No devices yet: check the Setup key' : 'Set up the Setup key first', ''));
+      sel.disabled = true;
+    } else {
+      sel.disabled = false;
+      sel.add(new Option('Choose a device…', ''));
+      fits.forEach(function (d) { sel.add(new Option(d.name + (d.product ? '  (' + d.product + ')' : ''), d.id)); });
+      if (others.length) {
+        var g = document.createElement('optgroup');
+        g.label = kind === 'power' ? 'No power meter' : kind === 'light' ? 'Not lights' : 'Not dimmable';
+        others.forEach(function (d) { var o = new Option(d.name, d.id); o.disabled = true; g.appendChild(o); });
+        sel.appendChild(g);
+      }
+      if (K.deviceId && !devs.some(function (d) { return d.id === K.deviceId; })) sel.add(new Option('(device no longer in your account)', K.deviceId));
+      sel.value = K.deviceId || '';
+    }
+    var dev = devs.filter(function (d) { return d.id === K.deviceId; })[0];
+    var outlets = dev && kind !== 'brightness' ? dev.switches : [];
+    $('outletRow').classList.toggle('hidden', !(outlets && outlets.length > 1));
+    var os = $('outlet'); os.innerHTML = '';
+    (outlets || []).forEach(function (o) { os.add(new Option(o.label, o.dp)); });
+    if (outlets && outlets.length) os.value = K.dp && outlets.some(function (o) { return o.dp === K.dp; }) ? K.dp : outlets[0].dp;
+    $('label').value = K.label || '';
+    $('label').placeholder = dev ? dev.name : 'Device name';
+    var custom = !!K.color;
+    document.querySelectorAll('#colorMode button').forEach(function (b) { b.classList.toggle('on', (b.dataset.v === 'custom') === custom); });
+    $('keyColor').classList.toggle('hidden', !custom);
+    $('keyColor').value = K.color || '#ffb448';
+    $('identify').disabled = !dev;
+  }
+
+  $('device').onchange = function () { K.deviceId = $('device').value; K.dp = ''; saveKey(); renderKey(); };
+  $('outlet').onchange = function () { K.dp = $('outlet').value; saveKey(); };
+  $('show').onchange = function () { K.show = $('show').value; saveKey(); };
+  $('label').onchange = function () { K.label = $('label').value.trim(); saveKey(); };
+  $('colorMode').onclick = function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    K.color = b.dataset.v === 'custom' ? (K.color || '#ffb448') : '';
+    saveKey(); renderKey();
+  };
+  $('keyColor').onchange = function () { K.color = $('keyColor').value; saveKey(); };
+  document.querySelectorAll('.seg[data-key]').forEach(function (seg) {
+    seg.onclick = function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var key = seg.dataset.key;
+      K[key] = key === 'join' ? b.dataset.v === 'yes' : b.dataset.v;
+      saveKey(); renderKey();
+    };
+  });
+  $('identify').onclick = function () { if (K.deviceId) toPlugin({ type: 'identify', deviceId: K.deviceId }); };
+
+  // ---------- setup key: account
+  function renderAccount() {
+    var a = state.account || {};
+    $('dot').className = 'dot ' + (a.state || '');
+    $('message').textContent = a.message || '';
+    $('message').className = 'msg' + (a.state === 'error' || a.state === 'expired' ? ' err' : '');
+    $('accountTag').textContent = a.state === 'ok' ? 'Connected' : a.state === 'working' ? 'Connecting…' : a.state === 'error' || a.state === 'expired' ? 'Problem' : '';
+    if (document.activeElement !== $('accessId')) $('accessId').value = G.accessId || '';
+    $('accessSecret').placeholder = G.accessSecret ? '•••••••• saved (type to replace)' : 'From iot.tuya.com';
+    $('region').value = G.region || 'auto';
+    $('refresh').disabled = !G.accessId || !G.accessSecret || a.state === 'working';
+    $('connect').disabled = a.state === 'working';
+    $('keyLayout').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === (G.keyLayout || 'auto')); });
+  }
+  $('connect').onclick = function () {
+    G.accessId = $('accessId').value.trim();
+    var sec = $('accessSecret').value.trim();
+    if (sec) G.accessSecret = sec;
+    $('accessSecret').value = '';
+    G.region = $('region').value;
+    state.account = { state: 'working', message: 'Connecting to the Tuya cloud…' };
+    renderAccount(); saveGlobals();
+    setTimeout(function () { toPlugin({ type: 'refresh' }); }, 400);
+  };
+  $('accessSecret').onkeydown = function (e) { if (e.key === 'Enter') $('connect').click(); };
+  $('refresh').onclick = function () { state.account = { state: 'working', message: 'Fetching your devices…' }; renderAccount(); toPlugin({ type: 'refresh' }); };
+  $('signout').onclick = function () { G.accessId = ''; G.accessSecret = ''; $('accessId').value = ''; $('accessSecret').value = ''; saveGlobals(); renderAccount(); };
+  $('help').onclick = function () { $('helpSteps').classList.toggle('hidden'); };
+  $('openTuya').onclick = function () { toPlugin({ type: 'openUrl', url: 'https://iot.tuya.com/' }); };
+  $('keyLayout').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; G.keyLayout = b.dataset.v; saveGlobals(); renderAccount(); };
+
+  function renderDevices() {
+    var ul = $('devList'); ul.innerHTML = '';
+    var devs = state.devices || [];
+    $('devCount').textContent = devs.length ? String(devs.length) : '';
+    if (!devs.length) { var li0 = document.createElement('li'); li0.innerHTML = '<span class="nm" style="color:var(--muted)">No devices yet</span>'; ul.appendChild(li0); return; }
+    devs.forEach(function (d) {
+      var li = document.createElement('li');
+      var nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = d.name;
+      var sm = document.createElement('small'); sm.textContent = (d.product || d.kind) + (d.hasPower ? ' · power meter' : ''); nm.appendChild(sm);
+      var lk = document.createElement('span'); var l = LINK[d.link] || ['Not on a key', ''];
+      lk.className = 'lk ' + l[1];
+      lk.textContent = l[0] + (d.link === 'local' && d.ip ? ' · ' + d.ip + (d.version ? ' v' + d.version : '') : '');
+      if (!d.link || d.link === 'offline') lk.textContent = d.ip ? l[0] : 'Not on a key';
+      li.appendChild(nm); li.appendChild(lk); ul.appendChild(li);
+    });
+  }
+
+  function renderAll() { renderKey(); renderAccount(); renderDevices(); }
+
+  window.connectElgatoStreamDeckSocket = function (port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    var info = {};
+    try { info = typeof actionInfo === 'string' ? JSON.parse(actionInfo) : (actionInfo || {}); } catch (e) {}
+    action = info.action || null;
+    kind = String(action || '').split('.').pop();
+    K = Object.assign({}, DEFAULT_KEY, (info.payload && info.payload.settings) || {});
+    $('thisKey').textContent = NAMES[kind] ? '· ' + NAMES[kind] : '';
+    socket = new WebSocket('ws://127.0.0.1:' + port);
+    socket.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      send({ event: 'getSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    socket.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (err) { return; }
+      if (msg.event === 'didReceiveGlobalSettings') {
+        var s = (msg.payload && msg.payload.settings) || {};
+        G = Object.assign({}, s);
+        Object.keys(DEFAULT_GLOBALS).forEach(function (k) { if (G[k] === undefined || G[k] === null) G[k] = DEFAULT_GLOBALS[k]; });
+        renderAll();
+      } else if (msg.event === 'didReceiveSettings') {
+        K = Object.assign({}, DEFAULT_KEY, (msg.payload && msg.payload.settings) || {});
+        renderKey();
+      } else if (msg.event === 'sendToPropertyInspector' && msg.payload && msg.payload.type === 'state') {
+        state = msg.payload;
+        renderAll();
+      }
+    };
+  };
+  window.connectSocket = window.connectElgatoStreamDeckSocket;
+  renderAll();
+})();
+</script>
+</body>
+</html>

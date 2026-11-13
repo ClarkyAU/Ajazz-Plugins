@@ -1,0 +1,10 @@
+Third-party parts bundled with the Smart Home plugin
+
+resvg.wasm - @resvg/resvg-wasm 2.6.2, https://github.com/yisibl/resvg-js
+  Mozilla Public License 2.0. Source: https://github.com/RazrFalcon/resvg
+
+BarlowSemiCondensed-*.ttf - Barlow by Jeremy Tribby, SIL Open Font License 1.1
+  (see Barlow-OFL.txt)
+
+plugin/index.js includes ws (MIT, https://github.com/websockets/ws).
+Tuya protocol details follow tinytuya (MIT, https://github.com/jasonacox/tinytuya).

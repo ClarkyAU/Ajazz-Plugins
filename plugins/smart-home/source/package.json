@@ -1,0 +1,22 @@
+{
+  "name": "com.clarkyau.smarthome",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Smart Home (Tuya / Smart Life / Grid Connect) plugin for the Ajazz Stream Dock software",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node test/run-all.js",
+    "package": "node scripts/build.js && node scripts/package.js"
+  },
+  "dependencies": {
+    "@resvg/resvg-wasm": "^2.6.2",
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "2.6.2",
+    "archiver": "7.0.1",
+    "esbuild": "0.24.0",
+    "node": "20.8.1",
+    "pngjs": "^7.0.0"
+  }
+}
