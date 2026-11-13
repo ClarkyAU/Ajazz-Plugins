@@ -1,0 +1,8 @@
+{
+  "Name": "Starter Plugin",
+  "Description": "Starter template for Ajazz Stream Dock plugins.",
+  "Category": "Starter Plugin",
+  "com.clarkyau.starter.example": { "Name": "Example", "Tooltip": "Shows a value with an icon and a name. Neighbouring keys join up." },
+  "com.clarkyau.starter.setup": { "Name": "Setup", "Tooltip": "Shows whether the source is connected. Press to search again." },
+  "Localization": {}
+}

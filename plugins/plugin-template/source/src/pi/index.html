@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>__NAME__ settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#7dc8ff; --good:#4ade80; --warn:#fbbf24; --bad:#f85149; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row > label { width: 110px; flex: none; color: var(--muted); }
+  .row > .grow { flex: 1; min-width: 0; }
+  select { width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; outline: none; }
+  select:focus { border-color: var(--accent); }
+  .check { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px 118px; }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+  .hint b { color: var(--text); font-weight: 600; }
+  .hidden { display: none !important; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+  td { padding: 4px 4px; border-bottom: 1px solid var(--line); }
+  td.r { text-align: right; white-space: nowrap; color: var(--muted); }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="status"><span class="dot" id="dot"></span><span class="txt" id="statusText">Starting…</span></div>
+
+  <!-- Setup key: everything about the outside source. Installs only from buttons here, never from a key press. -->
+  <div id="sec-setup" class="hidden">
+    <h2>Source</h2>
+    <div class="row"><label>Source</label><div class="grow"><select id="source"></select></div></div>
+    <div class="hint" id="note"></div>
+    <div class="row"><label>Check every</label><div class="grow"><select id="poll">
+      <option value="5">5 seconds</option><option value="10">10 seconds</option><option value="30">30 seconds</option><option value="60">60 seconds</option>
+    </select></div></div>
+    <h2>Found</h2>
+    <table id="found"></table>
+    <button id="rescan">Search again</button>
+    <div class="hint">Pressing the Setup key also searches again. This plugin only reads; it never changes anything on your devices.</div>
+    <div class="hint" id="version"></div>
+  </div>
+
+  <!-- Every other key: only its own options. -->
+  <div id="sec-key" class="hidden">
+    <h2>This key</h2>
+    <div class="row"><label>Shows</label><div class="grow"><select id="shows">
+      <option value="auto">Automatic</option>
+      <option value="value">Value</option>
+      <option value="status">Status</option>
+    </select></div></div>
+    <div class="hint" id="showsHint"></div>
+    <div class="check"><input type="checkbox" id="join" /><label for="join">Join with neighbouring keys</label></div>
+    <div class="row"><label>Item</label><div class="grow"><select id="item"></select></div></div>
+    <div id="sec-display">
+      <h2>Display</h2>
+      <div class="check"><input type="checkbox" id="showIcon" /><label for="showIcon">Show the icon</label></div>
+      <div class="check"><input type="checkbox" id="showName" /><label for="showName">Show the name</label></div>
+    </div>
+    <div id="sec-low">
+      <div class="row"><label>Low warning</label><div class="grow"><select id="low">
+        <option value="off">Off</option><option value="10">10%</option><option value="15">15%</option>
+        <option value="20">20%</option><option value="25">25%</option><option value="30">30%</option>
+      </select></div></div>
+      <div class="hint">The key flashes red at or below this level.</div>
+    </div>
+    <div class="hint">Keys next to each other fill in Value and Status in reading order. Turn off Join to make a key stand alone, or pick what each key shows.</div>
+  </div>
+</div>
+<script>
+(function () {
+  var ws = null, uuid = '', action = '', settings = {}, globals = { source: 'demo', poll: 10 }, st = null;
+  var NAMES = { value: 'Value', status: 'Status', blank: 'nothing' };
+  function $(id) { return document.getElementById(id); }
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function isSetup() { return /\.setup$/.test(action); }
+  function save() { send({ event: 'setSettings', context: uuid, payload: settings }); toPlugin({ type: 'settings', settings: settings }); }
+  function saveGlobals() { send({ event: 'setGlobalSettings', context: uuid, payload: globals }); toPlugin({ type: 'global', settings: globals }); }
+  function readGlobals(g) { g = g || {}; globals = { source: g.source || 'demo', setupSeen: true, poll: [5, 10, 30, 60].indexOf(g.poll) >= 0 ? g.poll : 10 }; }
+
+  // The state arrives every ~3 s. Never rebuild a control that is open: only touch it when it changed and is not focused.
+  function setOptions(el, html) { if (el.getAttribute('data-sig') === html) return; if (document.activeElement === el) return; el.innerHTML = html; el.setAttribute('data-sig', html); }
+  function setValue(el, v) { if (document.activeElement === el) return; if (el.type === 'checkbox') el.checked = !!v; else el.value = v; }
+  function setText(el, t) { if (el.textContent !== t) el.textContent = t; }
+
+  function itemOptions(first) {
+    var opts = '<option value="' + first.value + '">' + first.label + '</option>', list = st ? st.items : [];
+    for (var i = 0; i < list.length; i++) opts += '<option value="' + esc(list[i].id) + '">' + esc(list[i].name) + (list[i].present ? '' : ' (not found)') + '</option>';
+    return opts;
+  }
+  function render() {
+    var setup = isSetup();
+    $('sec-setup').classList.toggle('hidden', !setup);
+    $('sec-key').classList.toggle('hidden', setup);
+    var dot = $('dot');
+    if (!st) { setText($('statusText'), 'Starting…'); dot.style.background = 'var(--muted)'; }
+    else {
+      setText($('statusText'), st.statusText || '');
+      dot.style.background = st.status === 'ok' ? 'var(--good)' : (st.status === 'connecting' ? 'var(--warn)' : 'var(--bad)');
+    }
+    if (setup) {
+      var srcOpts = '', sl = st ? st.sources : [{ id: 'demo', name: 'Demo (built in)' }];
+      for (var s = 0; s < sl.length; s++) srcOpts += '<option value="' + esc(sl[s].id) + '">' + esc(sl[s].name) + '</option>';
+      setOptions($('source'), srcOpts);
+      setValue($('source'), globals.source);
+      setValue($('poll'), String(globals.poll));
+      setText($('note'), st ? st.note : '');
+      var rows = '', list = st ? st.items : [];
+      for (var i = 0; i < list.length; i++) {
+        var d = list[i];
+        rows += '<tr><td>' + esc(d.name) + '</td><td class="r">' + (d.present ? (d.value != null ? d.value + '%' : 'no value') : 'not found') + '</td></tr>';
+      }
+      var table = $('found');
+      var html = rows || '<tr><td>Nothing found yet.</td></tr>';
+      if (table.getAttribute('data-sig') !== html) { table.innerHTML = html; table.setAttribute('data-sig', html); }
+      setText($('version'), st ? 'Version ' + st.version : '');
+    } else {
+      setValue($('shows'), settings.shows || 'auto');
+      setValue($('join'), settings.join !== false);
+      setOptions($('item'), itemOptions({ value: 'default', label: 'Automatic' }));
+      setValue($('item'), settings.item || 'default');
+      setValue($('showIcon'), settings.showIcon !== false);
+      setValue($('showName'), settings.showName !== false);
+      setValue($('low'), settings.low || '20');
+      var role = st && st.role, hint = '';
+      if ((settings.shows || 'auto') === 'auto') hint = role ? 'Automatic picked <b>' + NAMES[role] + '</b> from where this key is' + (st.groupSize > 1 ? ' in its group of ' + st.groupSize + ' joined keys.' : '.') : 'Automatic picks from where this key is.';
+      if ($('showsHint').getAttribute('data-sig') !== hint) { $('showsHint').innerHTML = hint; $('showsHint').setAttribute('data-sig', hint); }
+      var shownRole = (settings.shows && settings.shows !== 'auto') ? settings.shows : role;
+      $('sec-display').classList.toggle('hidden', shownRole !== 'value');
+      $('sec-low').classList.toggle('hidden', shownRole !== 'value' && shownRole !== 'status');
+    }
+  }
+  function bind() {
+    $('source').onchange = function () { globals.source = this.value; saveGlobals(); render(); };
+    $('poll').onchange = function () { globals.poll = parseInt(this.value, 10); saveGlobals(); render(); };
+    $('rescan').onclick = function () { toPlugin({ type: 'rescan' }); };
+    $('shows').onchange = function () { if (this.value === 'auto') delete settings.shows; else settings.shows = this.value; save(); render(); };
+    $('join').onchange = function () { settings.join = this.checked; save(); };
+    $('item').onchange = function () { if (this.value === 'default') delete settings.item; else settings.item = this.value; save(); };
+    $('showIcon').onchange = function () { settings.showIcon = this.checked; save(); };
+    $('showName').onchange = function () { settings.showName = this.checked; save(); };
+    $('low').onchange = function () { settings.low = this.value; save(); };
+  }
+  function connect(port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    try { var info = JSON.parse(actionInfo || '{}'); action = info.action || ''; settings = (info.payload && info.payload.settings) || {}; } catch (e) {}
+    bind(); render();
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    ws.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (_) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { settings = p.settings || {}; render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { readGlobals(p.settings); render(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { st = p; if (p.global) readGlobals(p.global); render(); }
+    };
+  }
+  window.connectElgatoStreamDeckSocket = connect;
+  window.connectSocket = connect;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.starter.example",
+      "Name": "Example",
+      "Tooltip": "Shows a value with an icon and a name. Neighbouring keys join up.",
+      "Icon": "static/actions/example.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": ["Keypad", "Information"],
+      "Settings": {},
+      "States": [{ "Image": "static/keys/example.png", "TitleAlignment": "bottom", "FontSize": "10", "ShowTitle": false }]
+    },
+    {
+      "UUID": "com.clarkyau.starter.setup",
+      "Name": "Setup",
+      "Tooltip": "Shows whether the source is connected. Press to search again.",
+      "Icon": "static/actions/setup.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": ["Keypad", "Information"],
+      "Settings": {},
+      "States": [{ "Image": "static/keys/setup.png", "TitleAlignment": "bottom", "FontSize": "10", "ShowTitle": false }]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "Starter Plugin",
+  "Description": "Starter template for Ajazz Stream Dock plugins.",
+  "Icon": "static/plugin.png",
+  "Category": "Starter Plugin",
+  "CategoryIcon": "static/category.png",
+  "CodePathWin": "plugin/index.js",
+  "Version": "1.0.0",
+  "URL": "https://github.com/clarkyau",
+  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "Software": { "MinimumVersion": "3.10.188.226" },
+  "Nodejs": { "Version": "20" }
+}
