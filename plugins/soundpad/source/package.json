@@ -1,0 +1,18 @@
+{
+  "name": "soundpad-patch",
+  "version": "1.0.0",
+  "description": "Soundpad right-sound patch for the Ajazz Stream Dock store plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "./test.sh",
+    "build": "./build.sh",
+    "package": "./package.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.23.1",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,96 @@
+{"CategorySelect":"Cartoons","PTPModeCheck":false,"ShowTitleCheck":true,"SoundIndexInput":"13","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","PTPModeCheck":true,"ShowTitleCheck":true,"SoundIndexInput":"13","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"","SoundSelect":"sound-02"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"10","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"12","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"13","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"34","SoundSelect":"sound-06"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"35","SoundSelect":"sound-07"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"36","SoundSelect":"sound-08"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"37","SoundSelect":"sound-09"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"38","SoundSelect":"big-surprise"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"39","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"40","SoundSelect":"sound-11"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"41","SoundSelect":"sound-12"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"43","SoundSelect":"sound-06"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"44","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"44","SoundSelect":"sound-07"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"45","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"45","SoundSelect":"sound-08"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"46","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"46","SoundSelect":"sound-09"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"47","SoundSelect":"big-surprise"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"47","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"48","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"48","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"49","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"49","SoundSelect":"sound-11"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"50","SoundSelect":"sound-12"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"50","SoundSelect":"sound-43"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"51","SoundSelect":"sound-44"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":false,"SoundIndexInput":"9","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":true,"SoundIndexInput":"12","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","ShowTitleCheck":true,"SoundIndexInput":"13","SoundSelect":"sound-10"}
+{"CategorySelect":"Cartoons","SoundIndexInput":"12","SoundSelect":"board-clip"}
+{"CategorySelect":"Cartoons","SoundIndexInput":"13","SoundSelect":"sound-10"}
+{"CategorySelect":"Category 1","ShowTitleCheck":false,"SoundIndexInput":"6","SoundSelect":"sound-02"}
+{"CategorySelect":"Category 10","SoundIndexInput":"","SoundSelect":"sound-14"}
+{"CategorySelect":"Category 10","SoundIndexInput":"28","SoundSelect":"sound-40"}
+{"CategorySelect":"Category 10","SoundIndexInput":"39","SoundSelect":"sound-40"}
+{"CategorySelect":"Category 10","SoundIndexInput":"42","SoundSelect":"sound-40"}
+{"CategorySelect":"Category 11","SoundIndexInput":"","SoundSelect":"sound-37"}
+{"CategorySelect":"Category 11","SoundIndexInput":"32","SoundSelect":"board-clip"}
+{"CategorySelect":"Category 11","SoundIndexInput":"33","SoundSelect":"sound-42"}
+{"CategorySelect":"Category 11","SoundIndexInput":"43","SoundSelect":"board-clip"}
+{"CategorySelect":"Category 11","SoundIndexInput":"50","SoundSelect":"sound-42"}
+{"CategorySelect":"Category 3","SoundIndexInput":"11","SoundSelect":"sound-13"}
+{"CategorySelect":"Category 3","SoundIndexInput":"12","SoundSelect":"sound-14"}
+{"CategorySelect":"Category 3","SoundIndexInput":"14","SoundSelect":"sound-13"}
+{"CategorySelect":"Category 3","SoundIndexInput":"15","SoundSelect":"sound-14"}
+{"CategorySelect":"Category 4","ShowTitleCheck":false,"SoundIndexInput":"16","SoundSelect":"sound-15"}
+{"CategorySelect":"Category 4","ShowTitleCheck":true,"SoundIndexInput":"16","SoundSelect":"sound-15"}
+{"CategorySelect":"Category 4","SoundIndexInput":"16","SoundSelect":"sound-15"}
+{"CategorySelect":"Category 4","SoundIndexInput":"17","SoundSelect":"sound-16"}
+{"CategorySelect":"Category 4","SoundIndexInput":"18","SoundSelect":"sound-17"}
+{"CategorySelect":"Category 5","SoundIndexInput":"16","SoundSelect":"sound-18"}
+{"CategorySelect":"Category 5","SoundIndexInput":"17","SoundSelect":"sound-19"}
+{"CategorySelect":"Category 5","SoundIndexInput":"18","SoundSelect":"sound-20"}
+{"CategorySelect":"Category 5","SoundIndexInput":"19","SoundSelect":"sound-18"}
+{"CategorySelect":"Category 5","SoundIndexInput":"19","SoundSelect":"sound-21"}
+{"CategorySelect":"Category 5","SoundIndexInput":"20","SoundSelect":"sound-19"}
+{"CategorySelect":"Category 5","SoundIndexInput":"20","SoundSelect":"sound-22"}
+{"CategorySelect":"Category 5","SoundIndexInput":"21","SoundSelect":"sound-20"}
+{"CategorySelect":"Category 5","SoundIndexInput":"21","SoundSelect":"sound-23"}
+{"CategorySelect":"Category 5","SoundIndexInput":"22","SoundSelect":"sound-21"}
+{"CategorySelect":"Category 5","SoundIndexInput":"22","SoundSelect":"sound-24"}
+{"CategorySelect":"Category 5","SoundIndexInput":"23","SoundSelect":"sound-22"}
+{"CategorySelect":"Category 5","SoundIndexInput":"24","SoundSelect":"sound-23"}
+{"CategorySelect":"Category 5","SoundIndexInput":"25","SoundSelect":"sound-24"}
+{"CategorySelect":"Category 9","SoundIndexInput":"37","SoundSelect":"sound-38"}
+{"CategorySelect":"Category 9","SoundIndexInput":"38","SoundSelect":"sound-39"}
+{"CategorySelect":"Category 9","SoundIndexInput":"41","SoundSelect":"sound-39"}
+{"CategorySelect":"Category X","PTPModeCheck":false,"ShowTitleCheck":false,"SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Category X","PTPModeCheck":false,"ShowTitleCheck":true,"SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Category X","PTPModeCheck":true,"ShowTitleCheck":false,"SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Category X","ShowTitleCheck":false,"SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Category X","ShowTitleCheck":true,"SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Category X","SoundIndexInput":"1","SoundSelect":"sound-49"}
+{"CategorySelect":"Movies","SoundIndexInput":"36","SoundSelect":"sound-37"}
+{"CategorySelect":"Movies","SoundIndexInput":"40","SoundSelect":"board-clip"}
+{"CategorySelect":"Movies","SoundIndexInput":"42","SoundSelect":"board-clip"}
+{"CategorySelect":"Random","SoundIndexInput":"23","SoundSelect":"sound-45"}
+{"CategorySelect":"Random","SoundIndexInput":"24","SoundSelect":"sound-46"}
+{"CategorySelect":"Random","SoundIndexInput":"25","SoundSelect":"hello-there"}
+{"CategorySelect":"Random","SoundIndexInput":"26","SoundSelect":"sound-45"}
+{"CategorySelect":"Random","SoundIndexInput":"27","SoundSelect":"sound-46"}
+{"CategorySelect":"Random","SoundIndexInput":"27","SoundSelect":"sound-47"}
+{"CategorySelect":"Random","SoundIndexInput":"28","SoundSelect":"hello-there"}
+{"CategorySelect":"Random","SoundIndexInput":"30","SoundSelect":"sound-47"}
+{"CategorySelect":"Random","SoundIndexInput":"31","SoundSelect":"sound-48"}
+{"CategorySelect":"Random","SoundIndexInput":"34","SoundSelect":"sound-48"}
+{"CategorySelect":"Random","SoundIndexInput":"42","SoundSelect":"sound-25"}
+{"CategorySelect":"Random","SoundIndexInput":"43","SoundSelect":"sound-26"}
+{"CategorySelect":"Random","SoundIndexInput":"44","SoundSelect":"hello-there"}
+{"CategorySelect":"Random","SoundIndexInput":"46","SoundSelect":"sound-28"}
+{"CategorySelect":"Random","SoundIndexInput":"50","SoundSelect":"sound-32"}
+{"SoundIndexInput":"14","SoundSelect":"output"}
