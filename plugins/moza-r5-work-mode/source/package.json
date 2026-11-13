@@ -1,0 +1,23 @@
+{
+  "name": "com.clarkyau.mozabase",
+  "version": "0.5.0",
+  "description": "Moza base control for the Ajazz Stream Dock",
+  "main": "src/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tools/test.js",
+    "package": "node tools/package.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "esbuild": "^0.28.2",
+    "ws": "^8.22.0"
+  },
+  "private": true
+}

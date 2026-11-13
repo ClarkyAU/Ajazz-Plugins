@@ -1,0 +1,9 @@
+{
+  "Name": "Moza Base",
+  "Description": "Control the Moza R5 wheel base from the Ajazz Stream Dock.",
+  "Category": "Moza Base",
+  "com.clarkyau.mozabase.mode": {
+    "Name": "Base mode",
+    "Tooltip": "Moza R5 base: work mode and standby (version 0.1 only checks the link to Pit House)"
+  }
+}

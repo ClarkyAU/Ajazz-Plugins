@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Moza Base settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#2dd4bf; --good:#4ade80; --warn:#fbbf24; --bad:#f85149; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  h2:first-child { margin-top: 2px; }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 6px 0 8px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .lbl { display: block; color: var(--muted); font-size: 12px; margin: 8px 0 4px; }
+  input[type=text] { width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; font: inherit; }
+  .ver { color: var(--muted); font-size: 11px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Base</h2>
+  <div class="status"><span class="dot" id="dot"></span><span class="txt" id="modeText">Unknown</span></div>
+  <div class="hint" id="detail"></div>
+  <div class="hint">Pressing the key closes Pit House for about 10 seconds, switches the base between Work and Standby, then reopens Pit House.</div>
+
+  <h2>Cockpit plug</h2>
+  <label class="row"><input type="checkbox" id="follow" /> Follow the cockpit plug</label>
+  <div class="hint">Plug on: base to Work Mode, then Pit House opens. Plug off: Pit House closes and the base goes to Standby.</div>
+  <label class="lbl" for="plugName">Plug name (as in the Smart Home plugin)</label>
+  <input type="text" id="plugName" />
+  <div class="status"><span class="dot" id="pdot"></span><span class="txt" id="plugText">Checking…</span></div>
+  <div class="ver" id="ver"></div>
+</div>
+<script>
+(function () {
+  var ws, uuid, action, timer;
+  function $(id) { return document.getElementById(id); }
+  function send(o) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+  function render(p) {
+    var modeTxt = p.busy ? 'Working…' : p.error ? 'Problem' : p.mode === 'work' ? 'Work Mode' : p.mode === 'standby' ? 'Standby Mode' : 'Unknown until you press the key';
+    $('modeText').textContent = modeTxt;
+    $('dot').style.background = p.busy ? 'var(--warn)' : p.error ? 'var(--bad)' : p.mode === 'work' ? 'var(--good)' : p.mode === 'standby' ? 'var(--warn)' : 'var(--muted)';
+    $('detail').textContent = p.error ? p.error : (p.lastAction ? 'Last change: ' + p.lastAction : '');
+    var s = p.settings || {};
+    if (document.activeElement !== $('plugName')) $('plugName').value = s.plugName || '';
+    $('follow').checked = !!s.follow;
+    var pl = p.plug || {}, t = 'Checking…', c = 'var(--muted)';
+    if (pl.state === 'on') { t = (pl.name || 'Plug') + ' is on'; c = 'var(--good)'; }
+    else if (pl.state === 'off') { t = (pl.name || 'Plug') + ' is off'; c = 'var(--warn)'; }
+    else if (pl.state === 'unreachable') { t = "Can't reach " + (pl.name || 'the plug'); c = 'var(--bad)'; }
+    else if (pl.state === 'error') { t = pl.error || 'Plug not found'; c = 'var(--bad)'; }
+    $('plugText').textContent = t; $('pdot').style.background = c;
+    $('ver').textContent = p.version ? 'Moza Base ' + p.version : '';
+  }
+  function save() { send({ event: 'sendToPlugin', action: action, context: uuid, payload: { cmd: 'settings', follow: $('follow').checked, plugName: $('plugName').value } }); }
+  $('follow').addEventListener('change', save);
+  $('plugName').addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(save, 600); });
+  window.connectElgatoStreamDeckSocket = function (port, pluginUuid, registerEvent, info, actionInfo) {
+    uuid = pluginUuid;
+    try { action = JSON.parse(actionInfo).action; } catch (e) { action = ''; }
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'sendToPlugin', action: action, context: uuid, payload: { cmd: 'getState' } });
+    };
+    ws.onmessage = function (e) {
+      var m; try { m = JSON.parse(e.data); } catch (x) { return; }
+      if (m.event === 'sendToPropertyInspector' && m.payload && m.payload.type === 'state') render(m.payload);
+    };
+  };
+})();
+</script>
+</body>
+</html>

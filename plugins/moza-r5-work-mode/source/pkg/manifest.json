@@ -1,0 +1,49 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.mozabase.mode",
+      "Name": "Base mode",
+      "Tooltip": "Moza R5 base: work mode and standby (version 0.1 only checks the link to Pit House)",
+      "Icon": "static/actions/mode.png",
+      "PropertyInspectorPath": "pi/index.html",
+      "DisableAutomaticStates": true,
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "States": [
+        {
+          "Image": "static/keys/mode.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ]
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "Moza Base",
+  "Description": "Control the Moza R5 wheel base from the Ajazz Stream Dock.",
+  "Icon": "static/plugin.png",
+  "Category": "Moza Base",
+  "CategoryIcon": "static/category.png",
+  "CodePathWin": "plugin/index.js",
+  "Version": "0.5.0",
+  "URL": "https://github.com/clarkyau",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "3.10.188.226"
+  },
+  "Nodejs": {
+    "Version": "20"
+  }
+}

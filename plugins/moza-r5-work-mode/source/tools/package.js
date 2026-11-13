@@ -1,0 +1,12 @@
+'use strict';
+const fs = require('fs'); const path = require('path'); const { execSync } = require('child_process');
+const root = path.resolve(__dirname, '..'); const out = path.join(root, 'out');
+fs.rmSync(out, { recursive: true, force: true }); fs.mkdirSync(out, { recursive: true });
+const v = require('../package.json').version;
+const stage = path.join(out, 'stage'); fs.mkdirSync(stage);
+fs.cpSync(path.join(root, 'dist', 'com.clarkyau.mozabase.sdPlugin'), path.join(stage, 'com.clarkyau.mozabase.sdPlugin'), { recursive: true });
+for (const f of ['install.bat', 'uninstall.bat']) fs.copyFileSync(path.join(root, 'pkg', f), path.join(stage, f));
+execSync(`zip -qr ../mozabase-${v}-build.zip .`, { cwd: stage });
+fs.rmSync(stage, { recursive: true });
+execSync(`zip -qr out/mozabase-${v}-source.zip README.md package.json package-lock.json src tools pkg -x "*/node_modules/*"`, { cwd: root });
+console.log(fs.readdirSync(out).join('\n'));
