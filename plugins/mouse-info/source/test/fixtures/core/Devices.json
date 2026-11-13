@@ -1,0 +1,16 @@
+{
+  "deviceInstances": [
+    {
+      "productId": "ModelI2Wireless",
+      "instanceId": "example-instance-id",
+      "selectedProductColorIndex": 1,
+      "currentDeviceProfileId": "example-profile-1",
+      "iterableProfileIds": [
+        "example-profile-1",
+        "example-profile-2",
+        "example-profile-3"
+      ],
+      "settingsRestorePending": false
+    }
+  ]
+}

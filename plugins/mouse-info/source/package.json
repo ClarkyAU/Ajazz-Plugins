@@ -1,0 +1,21 @@
+{
+  "name": "mouseinfo",
+  "version": "1.3.0",
+  "description": "Mouse Info plugin for the Ajazz AKP153E (Stream Dock)",
+  "scripts": {
+    "build": "node tools/build.js",
+    "package": "node tools/build.js --zip",
+    "test": "node tools/build.js && node test/run-tests.js"
+  },
+  "author": "clarkyau",
+  "dependencies": {
+    "@electron/asar": "^4.3.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "esbuild": "^0.24.2",
+    "ws": "^8.22.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "private": true
+}

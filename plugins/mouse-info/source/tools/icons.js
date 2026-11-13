@@ -1,0 +1,22 @@
+// Draws the plugin's PNG icons (category, action list and default key images).
+const { Resvg } = require('@resvg/resvg-js');
+const fs = require('fs'), path = require('path');
+const R = require('../src/render');
+const out = process.argv[2];
+fs.mkdirSync(path.join(out, 'actions'), { recursive: true });
+fs.mkdirSync(path.join(out, 'keys'), { recursive: true });
+const INTER = ['/usr/share/fonts/opentype/inter/Inter-Regular.otf', '/usr/share/fonts/opentype/inter/Inter-SemiBold.otf', '/usr/share/fonts/opentype/inter/Inter-Bold.otf'].filter(f => fs.existsSync(f));
+const font = INTER.length ? { fontFiles: INTER, loadSystemFonts: false, defaultFontFamily: 'Inter' } : { loadSystemFonts: true };
+const png = (svg, w) => new Resvg(svg, { fitTo: { mode: 'width', value: w }, font }).render().asPng();
+const icon = (body) => `<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">${body}</svg>`;
+const blue = 'rgb(125,200,255)', green = 'rgb(74,222,128)';
+const mouse = `<rect x="44" y="14" width="56" height="96" rx="28" fill="none" stroke="${blue}" stroke-width="9"/><line x1="72" y1="30" x2="72" y2="50" stroke="${blue}" stroke-width="9" stroke-linecap="round"/>`;
+const plug = `<rect x="34" y="112" width="58" height="22" rx="6" fill="none" stroke="${green}" stroke-width="7"/><rect x="95" y="118" width="7" height="10" rx="2" fill="${green}"/><rect x="40" y="118" width="34" height="10" rx="2" fill="${green}"/>`;
+fs.writeFileSync(path.join(out, 'plugin.png'), png(icon(mouse + plug), 144));
+fs.writeFileSync(path.join(out, 'category.png'), png(icon(mouse + plug), 56));
+fs.writeFileSync(path.join(out, 'actions', 'mouse.png'), png(icon(mouse + plug), 72));
+const gear = `<circle cx="104" cy="104" r="16" fill="none" stroke="${green}" stroke-width="8"/>` + [0, 60, 120, 180, 240, 300].map(a => { const r = a * Math.PI / 180; return `<line x1="${(104 + 18 * Math.cos(r)).toFixed(1)}" y1="${(104 + 18 * Math.sin(r)).toFixed(1)}" x2="${(104 + 28 * Math.cos(r)).toFixed(1)}" y2="${(104 + 28 * Math.sin(r)).toFixed(1)}" stroke="${green}" stroke-width="8" stroke-linecap="round"/>`; }).join('');
+fs.writeFileSync(path.join(out, 'actions', 'setup.png'), png(icon(`<rect x="28" y="10" width="52" height="90" rx="26" fill="none" stroke="${blue}" stroke-width="9"/><line x1="54" y1="26" x2="54" y2="46" stroke="${blue}" stroke-width="9" stroke-linecap="round"/>` + gear), 72));
+const now = Date.now();
+fs.writeFileSync(path.join(out, 'keys', 'mouse.png'), png(R.batteryKey(null, {}, now), 144));
+fs.writeFileSync(path.join(out, 'keys', 'setup.png'), png(R.setupKey(null, 'searching', now), 144));

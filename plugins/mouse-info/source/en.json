@@ -1,0 +1,8 @@
+{
+  "Name": "Mouse Info",
+  "Description": "Battery, connection and profile for your wireless mouse (Glorious Model O 2 / D 2 / O 2 Mini / I 2 Wireless, or any Bluetooth mouse).",
+  "Category": "Mouse Info",
+  "com.clarkyau.mouseinfo.mouse": { "Name": "Mouse", "Tooltip": "Battery, connection (wireless, cable, Bluetooth) or profile with DPI. Neighbouring keys join up." },
+  "com.clarkyau.mouseinfo.setup": { "Name": "Setup", "Tooltip": "Which mouse is used and whether it is connected. Press to search again." },
+  "Localization": {}
+}

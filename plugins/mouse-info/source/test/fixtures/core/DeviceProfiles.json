@@ -1,0 +1,130 @@
+{
+  "profiles": [
+    {
+      "id": "example-profile-1",
+      "order": 0,
+      "mousePerformanceRecord": {
+        "pollingrate": 1000,
+        "inputLatency": 16,
+        "LodValue": 1,
+        "DebounceValue": 2,
+        "DpiNum": 6,
+        "dpiSelectIndex": 2,
+        "DpiStage": [
+          {
+            "value": 400,
+            "color": "#FFA40D"
+          },
+          {
+            "value": 800,
+            "color": "#26B4FF"
+          },
+          {
+            "value": 1600,
+            "color": "#FF2626",
+            "isDefault": true
+          },
+          {
+            "value": 3200,
+            "color": "#18B30A"
+          }
+        ],
+        "MotionSyncFlag": false,
+        "wirelessPollingRate": 1000,
+        "AdvancedDebounceSwitch": false,
+        "BeforePressValue": 0,
+        "BeforeReleaseValue": 0,
+        "AfterPressValue": 10,
+        "AfterReleaseValue": 10,
+        "LiftOffPressValue": 8,
+        "mechanicalDebounceTime": 0,
+        "opticalDebounceTime": 0,
+        "standby": 0
+      }
+    },
+    {
+      "id": "example-profile-2",
+      "order": 1,
+      "mousePerformanceRecord": {
+        "pollingrate": 1000,
+        "inputLatency": 16,
+        "LodValue": 1,
+        "DebounceValue": 2,
+        "DpiNum": 6,
+        "dpiSelectIndex": 1,
+        "DpiStage": [
+          {
+            "value": 400,
+            "color": "#FFA40D"
+          },
+          {
+            "value": 800,
+            "color": "#26B4FF"
+          },
+          {
+            "value": 1600,
+            "color": "#FF2626",
+            "isDefault": true
+          },
+          {
+            "value": 3200,
+            "color": "#18B30A"
+          }
+        ],
+        "MotionSyncFlag": false,
+        "wirelessPollingRate": 1000,
+        "AdvancedDebounceSwitch": false,
+        "BeforePressValue": 0,
+        "BeforeReleaseValue": 0,
+        "AfterPressValue": 10,
+        "AfterReleaseValue": 10,
+        "LiftOffPressValue": 8,
+        "mechanicalDebounceTime": 0,
+        "opticalDebounceTime": 0,
+        "standby": 0
+      }
+    },
+    {
+      "id": "example-profile-3",
+      "order": 2,
+      "mousePerformanceRecord": {
+        "pollingrate": 1000,
+        "inputLatency": 16,
+        "LodValue": 1,
+        "DebounceValue": 2,
+        "DpiNum": 6,
+        "dpiSelectIndex": 3,
+        "DpiStage": [
+          {
+            "value": 400,
+            "color": "#FFA40D"
+          },
+          {
+            "value": 800,
+            "color": "#26B4FF"
+          },
+          {
+            "value": 1600,
+            "color": "#FF2626",
+            "isDefault": true
+          },
+          {
+            "value": 3200,
+            "color": "#18B30A"
+          }
+        ],
+        "MotionSyncFlag": false,
+        "wirelessPollingRate": 1000,
+        "AdvancedDebounceSwitch": false,
+        "BeforePressValue": 0,
+        "BeforeReleaseValue": 0,
+        "AfterPressValue": 10,
+        "AfterReleaseValue": 10,
+        "LiftOffPressValue": 8,
+        "mechanicalDebounceTime": 0,
+        "opticalDebounceTime": 0,
+        "standby": 0
+      }
+    }
+  ]
+}

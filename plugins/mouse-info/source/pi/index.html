@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Mouse Info settings</title>
+<style>
+  :root { --bg:#232529; --field:#30333a; --line:#3c4049; --text:#e8ebf0; --muted:#9aa2ae; --accent:#7dc8ff; --good:#4ade80; --warn:#fbbf24; --bad:#f85149; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.4 "Segoe UI", Arial, sans-serif; }
+  ::-webkit-scrollbar { display: none; }
+  .wrap { padding: 10px 12px 16px; }
+  h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; font-weight: 700; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row > label { width: 110px; flex: none; color: var(--muted); }
+  .row > .grow { flex: 1; min-width: 0; }
+  select { width: 100%; background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font: inherit; outline: none; }
+  select:focus { border-color: var(--accent); }
+  .check { display: flex; align-items: center; gap: 8px; margin: 2px 0 8px 118px; }
+  .status { display: flex; align-items: center; gap: 8px; background: var(--field); border-radius: 6px; padding: 7px 9px; margin: 4px 0 10px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status .txt { flex: 1; min-width: 0; }
+  .hint { color: var(--muted); font-size: 12px; margin: 4px 0 8px; }
+  .hint b { color: var(--text); font-weight: 600; }
+  .hidden { display: none !important; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px; }
+  td { padding: 4px 4px; border-bottom: 1px solid var(--line); }
+  td.r { text-align: right; white-space: nowrap; color: var(--muted); }
+  button { background: var(--field); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font: inherit; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="status"><span class="dot" id="dot"></span><span class="txt" id="statusText">Starting…</span></div>
+
+  <div id="sec-setup" class="hidden">
+    <h2>Mouse</h2>
+    <div class="row"><label>Read battery from</label><div class="grow"><select id="source">
+      <option value="auto">Automatic</option>
+      <option value="glorious">Glorious mouse (listens to it)</option>
+      <option value="bluetooth">Bluetooth (Windows)</option>
+    </select></div></div>
+    <div class="hint" id="sourceHint"></div>
+    <div class="row"><label>Show</label><div class="grow"><select id="mouseId"></select></div></div>
+    <h2>Found</h2>
+    <table id="found"></table>
+    <button id="rescan">Search again</button>
+    <div class="hint" style="margin-top:10px">Other Mouse Info keys work without this key; it is only for choosing the mouse and checking the connection. Pressing it searches again.</div>
+  </div>
+
+  <div id="sec-mouse" class="hidden">
+    <h2>This key</h2>
+    <div class="row"><label>Shows</label><div class="grow"><select id="shows">
+      <option value="auto">Automatic</option>
+      <option value="battery">Battery</option>
+      <option value="connection">Connection</option>
+      <option value="profile">Profile</option>
+    </select></div></div>
+    <div class="hint" id="showsHint"></div>
+    <div class="check"><input type="checkbox" id="join" /><label for="join">Join with neighbouring keys</label></div>
+    <div class="row" id="row-low"><label>Low battery warning</label><div class="grow"><select id="low">
+      <option value="off">Off</option><option value="10">10%</option><option value="15">15%</option>
+      <option value="20">20%</option><option value="25">25%</option><option value="30">30%</option>
+    </select></div></div>
+    <div class="row" id="row-detail"><label>Under the number</label><div class="grow"><select id="detail">
+      <option value="dpi">DPI</option><option value="polling">Polling rate</option><option value="none">Nothing</option>
+    </select></div></div>
+    <div class="hint" id="profileHint"></div>
+  </div>
+</div>
+<script>
+(function () {
+  var ws = null, uuid = '', action = '', settings = {}, globals = { source: 'auto', mouseId: 'auto' }, st = null;
+  var SETUP = 'com.clarkyau.mouseinfo.setup';
+  var NAMES = { battery: 'Battery', connection: 'Connection', profile: 'Profile' };
+  var CONN = { receiver: 'Wireless', cable: 'Cable', bluetooth: 'Bluetooth' };
+  var SOURCE_HINT = {
+    auto: 'Uses a Glorious wireless mouse if one is plugged in, otherwise a Bluetooth mouse that Windows reports a battery level for.',
+    glorious: 'For Glorious Model O 2, D 2, O 2 Mini and I 2 Wireless. The plugin only listens to the mouse (it never changes its settings). The mouse sends its level now and then, so the first reading can take a minute. On the cable the mouse does not report its level at all, so the key shows Charging; the level comes back about a minute after unplugging. Profile, DPI and polling rate come from Glorious Core.',
+    bluetooth: 'Any mouse connected by Bluetooth that reports its battery to Windows. Updated every minute.'
+  };
+  function $(id) { return document.getElementById(id); }
+  function send(obj) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); }
+  function toPlugin(payload) { send({ event: 'sendToPlugin', action: action, context: uuid, payload: payload }); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function save() { send({ event: 'setSettings', context: uuid, payload: settings }); toPlugin({ type: 'settings', settings: settings }); }
+  function saveGlobals() { send({ event: 'setGlobalSettings', context: uuid, payload: globals }); toPlugin({ type: 'global', settings: globals }); }
+  function readGlobals(g) { g = g || {}; globals = { source: g.source || 'auto', mouseId: g.mouseId || 'auto' }; }
+  function selected() { if (!st) return null; for (var i = 0; i < st.mice.length; i++) if (st.mice[i].id === st.selected) return st.mice[i]; return null; }
+  function ageText(min) { if (min == null) return ''; if (min < 2) return 'just now'; if (min < 60) return min + ' min ago'; if (min < 2880) return Math.round(min / 60) + ' h ago'; return Math.round(min / 1440) + ' days ago'; }
+  function mouseLine(m) {
+    if (!m) return 'No mouse found yet';
+    var s = m.name + ' · ' + (m.present ? (CONN[m.conn] || 'connected') : 'not found');
+    if (m.level != null) s += ' · ' + m.level + '%' + (m.charging ? ' · charging' : '') + ' (' + ageText(m.ageMin) + ')';
+    else if (m.present) s += ' · waiting for the mouse to send its level';
+    return s;
+  }
+  function render() {
+    var isSetup = action === SETUP;
+    $('sec-setup').classList.toggle('hidden', !isSetup);
+    $('sec-mouse').classList.toggle('hidden', isSetup);
+    var m = selected();
+    var dot = $('dot');
+    if (!st) { $('statusText').textContent = 'Starting…'; dot.style.background = 'var(--muted)'; }
+    else if (st.helper === 'error') { $('statusText').textContent = 'The mouse helper is not running. Press Search again.'; dot.style.background = 'var(--bad)'; }
+    else { $('statusText').textContent = mouseLine(m); dot.style.background = m && m.present ? (m.level != null ? 'var(--good)' : 'var(--warn)') : 'var(--bad)'; }
+    if (isSetup) {
+      $('source').value = globals.source;
+      $('sourceHint').textContent = SOURCE_HINT[globals.source] || '';
+      var opts = '<option value="auto">Automatic</option>', rows = '', list = st ? st.mice : [];
+      for (var i = 0; i < list.length; i++) {
+        var x = list[i];
+        opts += '<option value="' + esc(x.id) + '">' + esc(x.name) + '</option>';
+        rows += '<tr><td>' + esc(x.name) + '</td><td class="r">' + (x.present ? esc(CONN[x.conn] || '') : 'not found') + '</td><td class="r">' + (x.level != null ? x.level + '%' : '–') + '</td></tr>';
+      }
+      if (globals.mouseId !== 'auto' && !list.some(function (x) { return x.id === globals.mouseId; })) opts += '<option value="' + esc(globals.mouseId) + '">(not found)</option>';
+      $('mouseId').innerHTML = opts; $('mouseId').value = globals.mouseId;
+      $('found').innerHTML = rows || '<tr><td>No mice found yet.</td></tr>';
+    } else {
+      $('shows').value = settings.shows || 'auto';
+      $('join').checked = settings.join !== false;
+      $('low').value = settings.low || '20';
+      $('detail').value = settings.detail || 'dpi';
+      var role = st && st.role;
+      var hint = '';
+      if ((settings.shows || 'auto') === 'auto') hint = role ? 'Automatic picked <b>' + NAMES[role] + '</b> from where this key is' + (st.groupSize > 1 ? ' in its group of ' + st.groupSize + ' joined keys (Battery, Connection, Profile in reading order).' : '.') : 'Automatic picks from where this key is.';
+      $('showsHint').innerHTML = hint;
+      $('row-low').classList.toggle('hidden', role !== 'battery');
+      $('row-detail').classList.toggle('hidden', role !== 'profile');
+      var p = st && st.profile, ph = '';
+      if (role === 'profile') ph = p ? 'Showing ' + esc(p.name) + (p.dpi ? ' · ' + p.dpi + ' DPI' : '') + (p.polling ? ' · ' + p.polling + ' Hz' : '') + '. From Glorious Core, and from the mouse when you switch profiles.' : (st && !st.core ? 'Profiles come from Glorious Core, which was not found on this PC.' : 'No profile information for this mouse yet.');
+      $('profileHint').innerHTML = ph;
+    }
+  }
+  function bind() {
+    $('source').onchange = function () { globals.source = this.value; globals.mouseId = 'auto'; saveGlobals(); render(); };
+    $('mouseId').onchange = function () { globals.mouseId = this.value; saveGlobals(); render(); };
+    $('rescan').onclick = function () { toPlugin({ type: 'rescan' }); };
+    $('shows').onchange = function () { if (this.value === 'auto') delete settings.shows; else settings.shows = this.value; save(); };
+    $('join').onchange = function () { settings.join = this.checked; save(); };
+    $('low').onchange = function () { settings.low = this.value; save(); };
+    $('detail').onchange = function () { settings.detail = this.value; save(); };
+  }
+  function connect(port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    try { var info = JSON.parse(actionInfo || '{}'); action = info.action || ''; settings = (info.payload && info.payload.settings) || {}; } catch (e) {}
+    bind(); render();
+    ws = new WebSocket('ws://127.0.0.1:' + port);
+    ws.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+      toPlugin({ type: 'hello' });
+    };
+    ws.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (_) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { settings = p.settings || {}; render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { readGlobals(p.settings); render(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { st = p; if (p.global) readGlobals(p.global); render(); }
+    };
+  }
+  window.connectElgatoStreamDeckSocket = connect;
+  window.connectSocket = connect;
+})();
+</script>
+</body>
+</html>
