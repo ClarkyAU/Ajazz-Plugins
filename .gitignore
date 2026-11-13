@@ -1,0 +1,11 @@
+node_modules/
+out/
+test/out/
+*.log
+.DS_Store
+Thumbs.db
+# real settings must never be committed
+settings.json
+import-settings.json
+devices.json
+*.local.json

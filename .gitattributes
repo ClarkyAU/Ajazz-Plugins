@@ -1,0 +1,5 @@
+*.zip binary
+*.png binary
+*.dll binary
+*.wasm binary
+*.ttf binary
