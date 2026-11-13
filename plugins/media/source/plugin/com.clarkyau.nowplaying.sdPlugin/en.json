@@ -1,0 +1,45 @@
+{
+  "Name": "Now Playing",
+  "Description": "Album art, track info, time and progress across your keys, plus media controls. Works with Spotify, browsers and any player in the Windows volume popup - no sign-in.",
+  "Category": "Now Playing",
+  "com.clarkyau.nowplaying.art": {
+    "Name": "Album Art",
+    "Tooltip": "The album cover. Neighbouring Album Art keys share one big picture."
+  },
+  "com.clarkyau.nowplaying.info": {
+    "Name": "Track Info",
+    "Tooltip": "Title, artist, album or player. Keys side by side work as one display, and long names scroll across them."
+  },
+  "com.clarkyau.nowplaying.time": {
+    "Name": "Time",
+    "Tooltip": "Time left or time played in the song."
+  },
+  "com.clarkyau.nowplaying.progress": {
+    "Name": "Progress Bar",
+    "Tooltip": "How far through the song. Neighbouring Progress Bar keys share one bar."
+  },
+  "com.clarkyau.nowplaying.playpause": {
+    "Name": "Play / Pause",
+    "Tooltip": "Play or pause the music."
+  },
+  "com.clarkyau.nowplaying.prev": {
+    "Name": "Previous Track",
+    "Tooltip": "Go back a track."
+  },
+  "com.clarkyau.nowplaying.next": {
+    "Name": "Next Track",
+    "Tooltip": "Skip to the next track."
+  },
+  "com.clarkyau.nowplaying.voldown": {
+    "Name": "Volume Down",
+    "Tooltip": "Turn the Windows volume down."
+  },
+  "com.clarkyau.nowplaying.volup": {
+    "Name": "Volume Up",
+    "Tooltip": "Turn the Windows volume up."
+  },
+  "com.clarkyau.nowplaying.mute": {
+    "Name": "Mute",
+    "Tooltip": "Mute or unmute Windows sound."
+  }
+}

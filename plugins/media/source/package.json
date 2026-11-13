@@ -1,0 +1,22 @@
+{
+  "name": "com.clarkyau.nowplaying",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Now Playing for the Ajazz AKP153E (Stream Dock software): album art, track info, time and progress across keys, plus media controls.",
+  "author": "clarkyau",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/build.js && node test/run-tests.js",
+    "package": "node scripts/build.js && node test/run-tests.js && node scripts/package.js"
+  },
+  "dependencies": {
+    "@resvg/resvg-wasm": "2.6.2",
+    "jpeg-js": "0.4.4",
+    "pngjs": "7.0.0",
+    "ws": "8.18.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.2",
+    "node-linux-x64": "20.8.1"
+  }
+}

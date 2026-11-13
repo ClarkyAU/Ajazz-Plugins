@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Now Playing</title>
+<style>
+  :root { --bg:#2d2d2d; --panel:#363636; --line:#444; --text:#e8e8ea; --muted:#9a9aa2; --accent:#7888ff; --seg:#262626; --seg-on:#4a4a52; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body { font: 12px/1.4 "Segoe UI", -apple-system, Roboto, Arial, sans-serif; padding: 8px 10px 14px; -webkit-user-select: none; user-select: none; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+  .head { display: flex; align-items: baseline; gap: 8px; margin: 2px 2px 8px; }
+  .head b { font-size: 13px; font-weight: 600; } .head span { color: var(--muted); }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; margin-bottom: 6px; padding: 2px 10px 6px; }
+  section h3 { font-size: 12px; font-weight: 600; margin: 6px 0 2px; }
+  .row { display: flex; align-items: center; min-height: 30px; gap: 10px; }
+  .row + .row { border-top: 1px solid #3e3e3e; }
+  .row > label { flex: 0 0 32%; color: var(--muted); }
+  .row > .ctl { flex: 1; display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+  .seg { display: flex; background: var(--seg); border-radius: 5px; padding: 2px; gap: 2px; flex-wrap: wrap; }
+  .seg button { border: 0; background: transparent; color: var(--muted); font: inherit; padding: 3px 9px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+  .seg button:hover { color: var(--text); }
+  .seg button.on { background: var(--seg-on); color: #fff; }
+  select { background: var(--seg); color: var(--text); border: 1px solid #555; border-radius: 4px; font: inherit; padding: 3px 6px; min-width: 190px; }
+  input[type="color"] { -webkit-appearance: none; appearance: none; width: 34px; height: 22px; border: 1px solid #555; border-radius: 4px; padding: 0; background: none; cursor: pointer; }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; } input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+  .hint { color: var(--muted); font-size: 11px; padding: 0 0 6px 32%; margin-left: 10px; margin-top: -2px; }
+  .btn { border: 1px solid #555; background: transparent; color: var(--text); font: inherit; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+  .btn:hover { border-color: #777; } .btn.done { color: #8fd18f; border-color: #5a8a5a; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+  <div class="head"><b>Now Playing</b><span id="keyName"></span></div>
+
+  <!-- Track Info -->
+  <section data-for="info">
+    <h3>This key</h3>
+    <div class="row">
+      <label>Shows</label>
+      <div class="ctl"><select id="show">
+        <option value="auto">Automatic</option>
+        <option value="titleartist">Title + artist</option>
+        <option value="title">Title</option>
+        <option value="artist">Artist</option>
+        <option value="line">Title &ndash; artist (one line)</option>
+        <option value="album">Album</option>
+        <option value="player">Player</option>
+      </select></div>
+    </div>
+    <div class="hint" id="showHint"></div>
+  </section>
+
+  <!-- joining: Track Info, Album Art, Progress Bar -->
+  <section data-for="info art progress">
+    <div class="row">
+      <label>Neighbouring keys</label>
+      <div class="ctl"><div class="seg" data-key="join">
+        <button data-v="true">Join</button><button data-v="false">Stand alone</button>
+      </div></div>
+    </div>
+    <div class="hint" id="joinHint"></div>
+  </section>
+
+  <!-- Time -->
+  <section data-for="time">
+    <h3>This key</h3>
+    <div class="row">
+      <label>Shows</label>
+      <div class="ctl"><div class="seg" data-key="time">
+        <button data-v="remaining">Time left</button><button data-v="elapsed">Time played</button>
+      </div></div>
+    </div>
+  </section>
+
+  <section data-for="info time">
+    <h3>Text</h3>
+    <div class="row" data-for="info">
+      <label>Text size</label>
+      <div class="ctl"><div class="seg" data-key="size">
+        <button data-v="small">Small</button><button data-v="medium">Medium</button><button data-v="large">Large</button>
+      </div></div>
+    </div>
+    <div class="row" data-for="info">
+      <label>Long names</label>
+      <div class="ctl"><div class="seg" data-key="scroll">
+        <button data-v="off">Don't scroll</button><button data-v="slow">Slow</button><button data-v="normal">Normal</button><button data-v="fast">Fast</button>
+      </div></div>
+    </div>
+    <div class="row">
+      <label>Colour</label>
+      <div class="ctl">
+        <span><input type="color" data-key="titleColor"> <span id="lbl-title">Title</span></span>
+        <span data-for="info"><input type="color" data-key="artistColor"> Artist</span>
+      </div>
+    </div>
+  </section>
+
+  <section data-for="info time progress">
+    <h3>Look</h3>
+    <div class="row">
+      <label>Background</label>
+      <div class="ctl"><div class="seg" data-key="background">
+        <button data-v="dark">Dark</button><button data-v="tinted">Album colour</button>
+      </div></div>
+    </div>
+  </section>
+
+  <section data-for="info art time progress">
+    <h3>Pressing this key</h3>
+    <div class="row">
+      <label>Does</label>
+      <div class="ctl"><div class="seg" data-key="press">
+        <button data-v="playpause">Play / Pause</button><button data-v="next">Next track</button><button data-v="none">Nothing</button>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- Buttons -->
+  <section data-for="control">
+    <h3>Button</h3>
+    <div class="row">
+      <label>Style</label>
+      <div class="ctl"><div class="seg" data-key="style">
+        <button data-v="glow">Glow</button><button data-v="flat">Flat</button>
+      </div></div>
+    </div>
+    <div class="row">
+      <label>Colour</label>
+      <div class="ctl">
+        <div class="seg" data-key="color"><button data-v="art">From album art</button><button data-v="custom">Custom</button></div>
+        <input type="color" data-key="customColor" id="customColor">
+      </div>
+    </div>
+  </section>
+
+  <section data-for="info art time progress control" id="sec-all">
+    <div class="row">
+      <label>Same look</label>
+      <div class="ctl"><button class="btn" id="applyAll">Use on all keys</button></div>
+    </div>
+    <div class="hint" id="allHint"></div>
+  </section>
+
+  <section>
+    <h3>Advanced (whole deck)</h3>
+    <div class="row">
+      <label>Key positions</label>
+      <div class="ctl"><div class="seg" id="keyLayout">
+        <button data-v="auto">Auto</button><button data-v="akp153">AKP153</button><button data-v="standard">Standard</button>
+      </div></div>
+    </div>
+    <div class="hint">Only change this if things land on the wrong keys.</div>
+  </section>
+
+<script>
+(function () {
+  'use strict';
+  var ID = 'com.clarkyau.nowplaying';
+  var CONTROLS = ['playpause', 'prev', 'next', 'voldown', 'volup', 'mute'];
+  // Must match src/settings.js
+  var DEFAULTS = {
+    art: { v: 3, join: true, press: 'playpause' },
+    info: { v: 3, show: 'auto', join: true, size: 'medium', scroll: 'normal', titleColor: '#ffffff', artistColor: '#b4b4c0', background: 'dark', press: 'playpause' },
+    time: { v: 3, time: 'remaining', titleColor: '#ffffff', background: 'dark', press: 'playpause' },
+    progress: { v: 3, join: true, background: 'dark', press: 'playpause' },
+    control: { v: 3, style: 'glow', color: 'art', customColor: '#7888ff' }
+  };
+  var NAMES = { art: 'Album Art', info: 'Track Info', time: 'Time', progress: 'Progress Bar', playpause: 'Play / Pause', prev: 'Previous Track', next: 'Next Track', voldown: 'Volume Down', volup: 'Volume Up', mute: 'Mute' };
+  var KIND_PLURAL = { art: 'Album Art', info: 'Track Info', time: 'Time', progress: 'Progress Bar', control: 'button' };
+  var SHOW_NAMES = { titleartist: 'title + artist', title: 'the title', artist: 'the artist', line: 'title – artist on one line', album: 'the album', player: 'the player' };
+
+  var socket = null, uuid = null, actionUUID = null, action = null, kind = null;
+  var K = {}, G = { keyLayout: 'auto' }, state = {};
+
+  function $(id) { return document.getElementById(id); }
+  function send(o) { if (socket && socket.readyState === 1) socket.send(JSON.stringify(o)); }
+
+  function render() {
+    document.querySelectorAll('[data-for]').forEach(function (el) {
+      el.classList.toggle('hidden', el.getAttribute('data-for').split(' ').indexOf(kind) < 0);
+    });
+    $('lbl-title').textContent = kind === 'time' ? 'Time' : 'Title';
+    if (kind === 'info') {
+      $('show').value = K.show;
+      var showing = SHOW_NAMES[state.resolved] || 'title + artist';
+      var strip = state.stripSize > 1 ? ' across ' + state.stripSize + ' keys' : '';
+      $('showHint').textContent = (K.show === 'auto' ? 'Automatic is showing ' + showing + strip + '. ' : 'Showing ' + showing + strip + '. ') +
+        'Keys side by side showing the same thing work as one display; long names scroll across them.';
+    }
+    $('joinHint').textContent = kind === 'art' ? 'Neighbouring Album Art keys share one big picture.'
+      : kind === 'progress' ? 'Neighbouring Progress Bar keys in a row share one bar.'
+      : 'Neighbouring Track Info keys work together. On Automatic one row shows title + artist; with two rows, the top shows the title and the next the artist.';
+    var n = state.sameKind || 1;
+    $('allHint').textContent = 'Copies this key\'s look to all ' + n + ' ' + KIND_PLURAL[kind] + ' keys' + (kind === 'control' ? '' : ' (not what each shows)') + '.';
+    document.querySelectorAll('.seg[data-key]').forEach(function (seg) {
+      var v = String(K[seg.dataset.key]);
+      seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === v); });
+    });
+    document.querySelectorAll('input[data-key]').forEach(function (el) { if (K[el.dataset.key]) el.value = K[el.dataset.key]; });
+    $('customColor').classList.toggle('hidden', kind !== 'control' || K.color !== 'custom');
+    document.querySelectorAll('#keyLayout button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === G.keyLayout); });
+  }
+
+  var saveTimer = null;
+  function save(now) {
+    send({ event: 'sendToPlugin', action: actionUUID, context: uuid, payload: { type: 'settings', settings: K } });
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { send({ event: 'setSettings', context: uuid, payload: K }); }, now ? 0 : 200);
+  }
+  function set(key, value) { if (K[key] === value) return; K[key] = value; render(); save(true); }
+
+  $('show').addEventListener('change', function () { set('show', this.value); });
+  document.querySelectorAll('.seg[data-key]').forEach(function (seg) {
+    seg.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var v = b.dataset.v; if (v === 'true') v = true; else if (v === 'false') v = false;
+      set(seg.dataset.key, v);
+    });
+  });
+  var colourTimer = null;
+  document.querySelectorAll('input[data-key]').forEach(function (el) {
+    el.addEventListener('input', function () { K[el.dataset.key] = el.value; clearTimeout(colourTimer); colourTimer = setTimeout(function () { save(false); }, 120); });
+    el.addEventListener('change', function () { K[el.dataset.key] = el.value; save(true); });
+  });
+  $('applyAll').addEventListener('click', function () {
+    send({ event: 'sendToPlugin', action: actionUUID, context: uuid, payload: { type: 'applyAll', settings: K } });
+    var b = this; b.textContent = 'Done'; b.classList.add('done');
+    setTimeout(function () { b.textContent = 'Use on all keys'; b.classList.remove('done'); }, 1500);
+  });
+  $('keyLayout').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || G.keyLayout === b.dataset.v) return;
+    G = { keyLayout: b.dataset.v }; render();
+    send({ event: 'sendToPlugin', action: actionUUID, context: uuid, payload: { type: 'globals', settings: G } });
+    send({ event: 'setGlobalSettings', context: uuid, payload: G });
+  });
+
+  function withDefaults(s) {
+    var base = DEFAULTS[kind], out = {}, k;
+    for (k in base) out[k] = base[k];
+    if (s) for (k in base) if (s[k] !== undefined && s[k] !== null && s[k] !== '') out[k] = s[k];
+    return out;
+  }
+
+  // Called by the Stream Dock software when the panel opens.
+  window.connectElgatoStreamDeckSocket = function (port, inUUID, registerEvent, appInfo, actionInfo) {
+    uuid = inUUID;
+    var info = {};
+    try { info = typeof actionInfo === 'string' ? JSON.parse(actionInfo) : (actionInfo || {}); } catch (e) {}
+    actionUUID = info.action || '';
+    action = actionUUID.indexOf(ID + '.') === 0 ? actionUUID.slice(ID.length + 1) : 'info';
+    kind = CONTROLS.indexOf(action) >= 0 ? 'control' : (DEFAULTS[action] ? action : 'info');
+    $('keyName').textContent = NAMES[action] ? '· ' + NAMES[action] : '';
+    K = withDefaults(info.payload && info.payload.settings);
+    render();
+    socket = new WebSocket('ws://127.0.0.1:' + port);
+    socket.onopen = function () {
+      send({ event: registerEvent, uuid: uuid });
+      send({ event: 'getSettings', context: uuid });
+      send({ event: 'getGlobalSettings', context: uuid });
+    };
+    socket.onmessage = function (e) {
+      var msg; try { msg = JSON.parse(e.data); } catch (err) { return; }
+      var p = msg.payload || {};
+      if (msg.event === 'didReceiveSettings') { K = withDefaults(p.settings); render(); }
+      else if (msg.event === 'didReceiveGlobalSettings') { G = { keyLayout: (p.settings && p.settings.keyLayout) || 'auto' }; render(); }
+      else if (msg.event === 'sendToPropertyInspector' && p.type === 'state') { state = p; if (p.globals) G = p.globals; render(); }
+    };
+  };
+  window.connectSocket = window.connectElgatoStreamDeckSocket;
+})();
+</script>
+</body>
+</html>

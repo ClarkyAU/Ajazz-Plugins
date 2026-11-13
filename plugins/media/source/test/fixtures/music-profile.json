@@ -1,0 +1,283 @@
+{
+    "Actions": {
+        "0,0": {
+            "ActionID": "003wi002-x865-7gio-9sbt-gqd0mbac3dd0",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "0,1": {
+            "ActionID": "73keuz4u-91ni-vg02-e6xi-8j75ez3xcu42",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "0,2": {
+            "ActionID": "0zt5h8j4-ae5o-x009-4znq-b29g4f3iyfh2",
+            "Controller": "Keypad",
+            "Name": "Next Track",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/next.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.next"
+        },
+        "1,0": {
+            "ActionID": "g8n0g0p1-v10z-0c21-o819-4168mcz40304",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "1,1": {
+            "ActionID": "yq6js2ae-omyj-qwp0-9710-9f44rv0j2171",
+            "Controller": "Keypad",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "1,2": {
+            "ActionID": "9r103582-7w3t-0x0g-590c-2j35h0551dx4",
+            "Controller": "Keypad",
+            "Name": "Title + Artist",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/combined.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.combined"
+        },
+        "2,0": {
+            "ActionID": "c3j3tt2y-krn9-2bha-feey-230ihnd0va28",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "2,1": {
+            "ActionID": "0jkoj6wd-g313-n5mh-mc5x-m4rozptx9owi",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "2,2": {
+            "ActionID": "5fynbmie-33ba-qvr6-44nt-4gnx9b4o61b9",
+            "Controller": "Keypad",
+            "Name": "Scene Shift",
+            "Settings": {
+                "DeviceUUID": "",
+                "ProfileUUID": "ID46D6GD-UQD5-IRQA-8ROM-W03M9D0HQ29L"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "Image": "6L1X0XIBF7PN2JG3Y4L50H5M948.png"
+                }
+            ],
+            "UUID": "com.hotspot.streamdock.profile.rotate"
+        },
+        "3,0": {
+            "ActionID": "3et2dd7v-8z7r-0dxt-1f09-q44mq4321b16",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "3,1": {
+            "ActionID": "9bm53hjt-p9k8-vbf9-2rfr-yig110l9yj6v",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "3,2": {
+            "ActionID": "4se2kj1z-3j20-5q17-q18j-s22qx5ucal1o",
+            "Controller": "Keypad",
+            "Name": "Previous Track",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/prev.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.prev"
+        },
+        "4,0": {
+            "ActionID": "p6rfq28j-u351-k2bk-2v0k-29t1o2i3o6xo",
+            "Controller": "",
+            "Name": "Album Art",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/art.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.art"
+        },
+        "4,1": {
+            "ActionID": "r360c8uq-y7l1-m80p-0i28-xls90d9158d9",
+            "Controller": "Keypad",
+            "Name": "Play / Pause",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/playpause.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.playpause"
+        },
+        "4,2": {
+            "ActionID": "06294fvk-wcpg-9202-i4e3-6bfw51uwwi5j",
+            "Controller": "Keypad",
+            "Name": "Title + Artist",
+            "Settings": {},
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/combined.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "dev.nowplaying.deck.combined"
+        },
+        "5,0": {
+            "ActionID": "4d02f61p-9r73-ozr4-v9j2-4ah5gcbsrpbo",
+            "Controller": "Information",
+            "Name": "World Time",
+            "Settings": {
+                "amplify": true,
+                "isBackgroundHidden": false,
+                "select": "1",
+                "theme": "theme2",
+                "title": "",
+                "zone": "system"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "FontStyle": "Bold",
+                    "Image": "images/index.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.mirabox.streamdock.time.action1"
+        },
+        "5,1": {
+            "ActionID": "4an71q2k-qay1-zfd2-cy5w-1zj0p61aiw0e",
+            "Controller": "Information",
+            "Name": "Info board",
+            "Settings": {
+                "press": "none",
+                "textSmall": "130"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "images/key-blank.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.bambumonitor.infoboard"
+        }
+    },
+    "DeviceModel": "20GBA9901",
+    "DeviceSerialNumber": "000000000000",
+    "DeviceUUID": "APK153E_293SV3",
+    "Name": "Music",
+    "Pages": {
+        "Current": "Y4H3TLL8-YJOQ-0305-27IJ-HRWC82WPU1II.sdProfile",
+        "Pages": [
+            "Y4H3TLL8-YJOQ-0305-27IJ-HRWC82WPU1II.sdProfile"
+        ]
+    },
+    "Version": "1.0"
+}

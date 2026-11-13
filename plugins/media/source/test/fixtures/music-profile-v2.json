@@ -1,0 +1,421 @@
+{
+    "Actions": {
+        "0,0": {
+            "ActionID": "8y34067y-vm85-evva-16l4-ieyyf70o4b11",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "dark",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "auto",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "0,1": {
+            "ActionID": "s99d2509-52r1-p7a8-3w1m-2g5b13mki1r8",
+            "Controller": "Keypad",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "tinted",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "progress",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "0,2": {
+            "ActionID": "8p387t01-z234-52pz-w5ly-2fg3qg3ex2x4",
+            "Controller": "",
+            "Name": "Next Track",
+            "Settings": {
+                "color": "art",
+                "customColor": "#7888ff",
+                "style": "glow",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/next.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.next"
+        },
+        "1,0": {
+            "ActionID": "30bw66j0-6y77-71ff-93ij-5224za3733p4",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "dark",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "auto",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "1,1": {
+            "ActionID": "n2tlbs9v-k0x9-qr3r-iuva-o72663z909y7",
+            "Controller": "Keypad",
+            "Name": "Volume Up",
+            "Settings": {
+                "color": "art",
+                "customColor": "#7888ff",
+                "style": "glow",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/volup.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.volup"
+        },
+        "1,2": {
+            "ActionID": "jslaor3f-1c3r-pzz9-b9t6-46k434tb02cu",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "tinted",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "titleartist",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "2,0": {
+            "ActionID": "0fe307ir-spb5-3149-kjmi-s2cf73dj0rm5",
+            "Controller": "Keypad",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "tinted",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "progress",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "2,1": {
+            "ActionID": "60sye45e-44zu-771q-xstd-98w5aa6at7dn",
+            "Controller": "Keypad",
+            "Name": "Volume Down",
+            "Settings": {
+                "color": "art",
+                "customColor": "#7888ff",
+                "style": "glow",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/voldown.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.voldown"
+        },
+        "2,2": {
+            "ActionID": "5fynbmie-33ba-qvr6-44nt-4gnx9b4o61b9",
+            "Controller": "Keypad",
+            "Name": "Scene Shift",
+            "Settings": {
+                "DeviceUUID": "",
+                "ProfileUUID": "ID46D6GD-UQD5-IRQA-8ROM-W03M9D0HQ29L"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "Image": "6L1X0XIBF7PN2JG3Y4L50H5M948.png"
+                }
+            ],
+            "UUID": "com.hotspot.streamdock.profile.rotate"
+        },
+        "3,0": {
+            "ActionID": "02rl9x22-s74p-4f05-bu3h-1h6k3382g7h4",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "dark",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "auto",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "3,1": {
+            "ActionID": "78k604zs-1kpg-vq4k-280g-347f3idk2n01",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "tinted",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "time",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "3,2": {
+            "ActionID": "3g2eu8jr-tv87-0021-y22n-2w292b7fa2e7",
+            "Controller": "",
+            "Name": "Previous Track",
+            "Settings": {
+                "color": "art",
+                "customColor": "#7888ff",
+                "style": "glow",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/prev.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.prev"
+        },
+        "4,0": {
+            "ActionID": "j4tp2kev-s4iy-6380-a9pc-i7m06mi385yo",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "dark",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "auto",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "4,1": {
+            "ActionID": "t53nt98d-603k-j168-sgd4-1wr4vkj3y5r7",
+            "Controller": "",
+            "Name": "Play / Pause",
+            "Settings": {
+                "color": "art",
+                "customColor": "#7888ff",
+                "style": "glow",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/playpause.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.playpause"
+        },
+        "4,2": {
+            "ActionID": "3s31myf0-m2z2-14u2-73w8-a50n14c60y04",
+            "Controller": "",
+            "Name": "Now Playing",
+            "Settings": {
+                "artistColor": "#b4b4c0",
+                "background": "tinted",
+                "join": true,
+                "press": "playpause",
+                "scroll": "normal",
+                "show": "titleartist",
+                "size": "medium",
+                "time": "remaining",
+                "titleColor": "#ffffff",
+                "v": 2
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "static/display.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.nowplaying.display"
+        },
+        "5,0": {
+            "ActionID": "4d02f61p-9r73-ozr4-v9j2-4ah5gcbsrpbo",
+            "Controller": "Information",
+            "Name": "World Time",
+            "Settings": {
+                "amplify": true,
+                "isBackgroundHidden": false,
+                "select": "1",
+                "theme": "theme2",
+                "title": "",
+                "zone": "system"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "FontStyle": "Bold",
+                    "Image": "images/index.png",
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.mirabox.streamdock.time.action1"
+        },
+        "5,1": {
+            "ActionID": "4an71q2k-qay1-zfd2-cy5w-1zj0p61aiw0e",
+            "Controller": "Information",
+            "Name": "Info board",
+            "Settings": {
+                "press": "none",
+                "textSmall": "130"
+            },
+            "State": 0,
+            "States": [
+                {
+                    "FontSize": "10",
+                    "Image": "images/key-blank.png",
+                    "ShowTitle": false,
+                    "TitleAlignment": "bottom"
+                }
+            ],
+            "UUID": "com.clarkyau.bambumonitor.infoboard"
+        }
+    },
+    "DeviceModel": "20GBA9901",
+    "DeviceSerialNumber": "000000000000",
+    "DeviceUUID": "APK153E_293SV3",
+    "Name": "Music",
+    "Pages": {
+        "Current": "Y4H3TLL8-YJOQ-0305-27IJ-HRWC82WPU1II.sdProfile",
+        "Pages": [
+            "Y4H3TLL8-YJOQ-0305-27IJ-HRWC82WPU1II.sdProfile"
+        ]
+    },
+    "Version": "1.0"
+}

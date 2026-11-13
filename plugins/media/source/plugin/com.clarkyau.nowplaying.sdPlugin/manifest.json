@@ -1,0 +1,266 @@
+{
+  "SDKVersion": 1,
+  "Author": "clarkyau",
+  "Name": "Now Playing",
+  "Description": "Album art, track info, time and progress across your keys, plus media controls. Works with Spotify, browsers and any player in the Windows volume popup - no sign-in.",
+  "Icon": "static/plugin.png",
+  "Category": "Now Playing",
+  "CategoryIcon": "static/plugin.png",
+  "CodePathWin": "plugin/index.js",
+  "Version": "2.0.0",
+  "URL": "",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "3.10.188.226"
+  },
+  "Nodejs": {
+    "Version": "20"
+  },
+  "Actions": [
+    {
+      "UUID": "com.clarkyau.nowplaying.art",
+      "Name": "Album Art",
+      "Tooltip": "The album cover. Neighbouring Album Art keys share one big picture.",
+      "Icon": "static/art.png",
+      "States": [
+        {
+          "Image": "static/art.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.info",
+      "Name": "Track Info",
+      "Tooltip": "Title, artist, album or player. Keys side by side work as one display, and long names scroll across them.",
+      "Icon": "static/info.png",
+      "States": [
+        {
+          "Image": "static/info.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.time",
+      "Name": "Time",
+      "Tooltip": "Time left or time played in the song.",
+      "Icon": "static/time.png",
+      "States": [
+        {
+          "Image": "static/time.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.progress",
+      "Name": "Progress Bar",
+      "Tooltip": "How far through the song. Neighbouring Progress Bar keys share one bar.",
+      "Icon": "static/progress.png",
+      "States": [
+        {
+          "Image": "static/progress.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.playpause",
+      "Name": "Play / Pause",
+      "Tooltip": "Play or pause the music.",
+      "Icon": "static/playpause.png",
+      "States": [
+        {
+          "Image": "static/playpause.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.prev",
+      "Name": "Previous Track",
+      "Tooltip": "Go back a track.",
+      "Icon": "static/prev.png",
+      "States": [
+        {
+          "Image": "static/prev.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.next",
+      "Name": "Next Track",
+      "Tooltip": "Skip to the next track.",
+      "Icon": "static/next.png",
+      "States": [
+        {
+          "Image": "static/next.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.voldown",
+      "Name": "Volume Down",
+      "Tooltip": "Turn the Windows volume down.",
+      "Icon": "static/voldown.png",
+      "States": [
+        {
+          "Image": "static/voldown.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.volup",
+      "Name": "Volume Up",
+      "Tooltip": "Turn the Windows volume up.",
+      "Icon": "static/volup.png",
+      "States": [
+        {
+          "Image": "static/volup.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    },
+    {
+      "UUID": "com.clarkyau.nowplaying.mute",
+      "Name": "Mute",
+      "Tooltip": "Mute or unmute Windows sound.",
+      "Icon": "static/mute.png",
+      "States": [
+        {
+          "Image": "static/mute.png",
+          "TitleAlignment": "bottom",
+          "FontSize": "10",
+          "ShowTitle": false
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Information"
+      ],
+      "Settings": {},
+      "DisableAutomaticStates": true,
+      "SupportedInMultiActions": false,
+      "UserTitleEnabled": false,
+      "VisibleInActionsList": true,
+      "PropertyInspectorPath": "propertyInspector/index.html"
+    }
+  ]
+}

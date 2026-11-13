@@ -1,0 +1,5 @@
+node_modules/
+dist/
+test/out/
+plugin/com.clarkyau.nowplaying.sdPlugin/plugin/index.js
+plugin/com.clarkyau.nowplaying.sdPlugin/plugin.log*
