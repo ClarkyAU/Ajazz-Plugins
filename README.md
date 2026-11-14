@@ -24,9 +24,9 @@ plugins/<name>/        one folder per plugin
   README.md            what it does, keys, settings, what is tested
   CHANGELOG.md         versions, newest first
   NOTES.md             decisions, lessons, known issues
-  install.bat          installer (double-click)
-  uninstall.bat        uninstaller (keeps your settings)
-  releases/            installable zip + source zip for each version
+  releases/            installable zip + source zip for each version.
+                       The plain zip holds the installers (install.bat with
+                       install.ps1, uninstall.bat) and the plugin files.
   source/              full source, tests, build scripts
 templates/
   plugin-template/     starting point for every new plugin
