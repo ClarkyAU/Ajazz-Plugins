@@ -38,10 +38,10 @@ docs/
 ## Installing a plugin
 
 1. Open the plugin's `releases/` folder and download the file without `-source` in its name (for example `com.clarkyau.truenas-1.2.0.zip`).
-2. Unzip it and double-click `install.bat`.
+2. Unzip it fully (don't run it from inside the zip) and double-click `install.bat`. Keep the `.ps1` files next to it.
 3. Restart the Ajazz software from the tray.
 
-Settings are changed in the Ajazz settings panel. `uninstall.bat` removes the plugin but keeps your settings.
+Settings are changed in the Ajazz settings panel. `uninstall.bat` (in the same unzipped folder) removes the plugin but keeps your settings.
 
 ## Adding or updating a plugin
 
